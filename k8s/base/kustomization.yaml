@@ -1,0 +1,4 @@
+bases:
+    - ./services
+resources:
+    - ingress.yaml

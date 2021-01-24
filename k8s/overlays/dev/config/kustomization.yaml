@@ -1,0 +1,11 @@
+resources:
+    - config.yaml
+namePrefix: dev-
+vars:
+    - name: DOMAIN
+      objref:
+          apiVersion: kustomize.config.k8s.io/v1
+          kind: Values
+          name: config
+      fieldref:
+          fieldpath: spec.domain

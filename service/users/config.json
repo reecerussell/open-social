@@ -1,0 +1,16 @@
+{
+	"passwordValidator": {
+		"requiredLength": 8,
+		"requireUppercase": true,
+		"requireLowercase": true,
+		"requireNonAlphanumeric": true,
+		"requireDigit": true,
+		"requiredUniqueChars": 6
+	},
+	"passwordHasher": {
+		"iterationCount": 15000,
+		"saltSize": 128,
+		"keySize": 256,
+		"hashKey": 1
+	}
+}

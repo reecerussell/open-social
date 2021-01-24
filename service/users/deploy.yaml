@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: users
+        name: users
+    name: users
+spec:
+    selector:
+        matchLabels:
+            app: users
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: users
+        spec:
+            containers:
+                - image: "reecerussell/open-social-users"
+                  name: users
+                  resources:
+                      limits:
+                          cpu: "200m"
+                          memory: "400Mi"
+                      requests:
+                          cpu: "40m"
+                          memory: "100Mi"
+                  env:
+                      - name: "CONNECTION_STRING"
+                        valueFrom:
+                            secretKeyRef:
+                                name: database
+                                key: connection-string
+                  ports:
+                      - containerPort: 80
+                        protocol: TCP
+                  livenessProbe:
+                      httpGet:
+                          path: /health
+                          port: 80
+                      initialDelaySeconds: 3
+                      periodSeconds: 30
+                      timeoutSeconds: 2
+                  readinessProbe:
+                      httpGet:
+                          path: /health
+                          port: 80
+                      initialDelaySeconds: 3
+                      periodSeconds: 30
+                      timeoutSeconds: 2

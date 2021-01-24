@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: users
+        name: users
+    name: users
+spec:
+    selector:
+        matchLabels:
+            app: users
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: users
+        spec:
+            containers:
+                - image: "reecerussell/open-social-backend"
+                  name: users
+                  resources:
+                      limits:
+                          cpu: "100m"
+                          memory: "200Mi"
+                      requests:
+                          cpu: "20m"
+                          memory: "50Mi"
+                  ports:
+                      - containerPort: 80
+                        protocol: TCP

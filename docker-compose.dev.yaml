@@ -1,0 +1,50 @@
+version: "3.7"
+
+networks:
+    open-social:
+        driver: bridge
+
+services:
+    backend:
+        image: reecerussell/open-social-backend
+        build:
+            context: .
+            dockerfile: ./service/backend/Dockerfile
+        environment:
+            USERS_API_URL: http://users:80
+            AUTH_API_URL: http://auth:80
+            TOKEN_PUBLIC_KEY: /app/token-rsa.dev.pub
+        volumes:
+            - ./token-rsa.dev.pub:/app/token-rsa.dev.pub
+        ports:
+            - 80:80
+        networks:
+            - open-social
+        depends_on:
+            - users
+            - auth
+
+    users:
+        image: reecerussell/open-social-users
+        build:
+            context: .
+            dockerfile: ./service/users/Dockerfile
+        environment:
+            CONNECTION_STRING: sqlserver://dev:cA6EfDrJdhVhtnb8@34.105.141.251?database=open-social-dev
+        networks:
+            - open-social
+
+    auth:
+        image: reecerussell/open-social-auth
+        build:
+            context: .
+            dockerfile: ./service/auth/Dockerfile
+        environment:
+            USERS_API_URL: http://users:80
+            TOKEN_PRIVATE_KEY: /app/token-rsa.dev.pem
+        volumes:
+            - ./token-rsa.dev.pem:/app/token-rsa.dev.pem
+        networks:
+            - open-social
+        depends_on:
+            - users
