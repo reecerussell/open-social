@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/reecerussell/open-social/service/posts/dao"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -74,6 +75,32 @@ func TestPost_Dao(t *testing.T) {
 	assert.Equal(t, testUserID, d.UserID)
 	assert.Equal(t, testPostedDate, d.Posted)
 	assert.Equal(t, testCaption, d.Caption)
+}
+
+func TestPostFromDao(t *testing.T) {
+	const (
+		testPostID      = 1
+		testReferenceID = "3y294"
+		testUserID      = 23
+		testCaption     = "Hello World"
+	)
+	testPostedDate := time.Now().UTC()
+
+	d := &dao.Post{
+		ID:          testPostID,
+		ReferenceID: testReferenceID,
+		UserID:      testUserID,
+		Posted:      testPostedDate,
+		Caption:     testCaption,
+	}
+
+	post := PostFromDao(d)
+
+	assert.Equal(t, testPostID, post.id)
+	assert.Equal(t, testReferenceID, post.referenceID)
+	assert.Equal(t, testUserID, post.userID)
+	assert.Equal(t, testPostedDate, post.posted)
+	assert.Equal(t, testCaption, post.caption)
 }
 
 func TestPost_ReferenceID(t *testing.T) {

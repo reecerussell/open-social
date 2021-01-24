@@ -1,4 +1,4 @@
-package users
+package client
 
 // Error is a custom error type which has a status code.
 type Error struct {

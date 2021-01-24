@@ -26,9 +26,11 @@ func main() {
 
 	createUser := ctn.GetService("CreateUserHandler").(*handler.CreateUserHandler)
 	getClaims := ctn.GetService("GetClaimsHandler").(*handler.GetClaimsHandler)
+	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
 
 	app := core.NewApp("0.0.0.0:80")
 	app.Post("/users", createUser)
+	app.Get("/users/id/{referenceId}", getIDByReference)
 	app.Post("/claims", getClaims)
 	app.HealthCheck(core.HealthCheckHandler)
 
@@ -104,6 +106,12 @@ func buildServices(cnf *Config) *core.Container {
 		repo := ctn.GetService("UserRepository").(repository.UserRepository)
 
 		return handler.NewGetClaimsHandler(hasher, repo)
+	})
+
+	ctn.AddService("GetIDByReferenceHandler", func(ctn *core.Container) interface{} {
+		repo := ctn.GetService("UserRepository").(repository.UserRepository)
+
+		return handler.NewGetIDByReferenceHandler(repo)
 	})
 
 	return ctn

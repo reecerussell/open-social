@@ -10,29 +10,33 @@ import (
 	"github.com/reecerussell/open-social/service/posts/repository"
 )
 
-type CreatePost struct {
+// CreatePostHandler is a http.Handler used to handle POSt requests to create post records.
+type CreatePostHandler struct {
 	core.Handler
 	repo  repository.PostRepository
 	users users.Client
 }
 
+// CreatePostRequest is the body of a request.
 type CreatePostRequest struct {
 	UserReferenceID string `json:"userReferenceId"`
 	Caption         string `json:"caption"`
 }
 
+// CreatePostResponse is the body of the response.
 type CreatePostResponse struct {
 	ReferenceID string `json:"referenceId"`
 }
 
-func NewCreatePost(repo repository.PostRepository, users users.Client) *CreatePost {
-	return &CreatePost{
+// NewCreatePostHandler returns a new instance of CreatePostHandler.
+func NewCreatePostHandler(repo repository.PostRepository, users users.Client) *CreatePostHandler {
+	return &CreatePostHandler{
 		repo:  repo,
 		users: users,
 	}
 }
 
-func (h *CreatePost) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *CreatePostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var data CreatePostRequest
 	_ = json.NewDecoder(r.Body).Decode(&data)
 	defer r.Body.Close()
@@ -46,6 +50,12 @@ func (h *CreatePost) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	post, err := model.NewPost(*userID, data.Caption)
 	if err != nil {
 		h.RespondError(w, err, http.StatusBadRequest)
+		return
+	}
+
+	err = h.repo.Create(r.Context(), post)
+	if err != nil {
+		h.RespondError(w, err, http.StatusInternalServerError)
 		return
 	}
 

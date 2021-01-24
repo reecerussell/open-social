@@ -80,3 +80,16 @@ func (p *Post) Dao() *dao.Post {
 		Caption:     p.caption,
 	}
 }
+
+// PostFromDao returns a new instance of Post, populated with the
+// data from the data access object. This should only be used
+// by the PostRepository, to instantiate new domain models.
+func PostFromDao(d *dao.Post) *Post {
+	return &Post{
+		id:          d.ID,
+		referenceID: d.ReferenceID,
+		userID:      d.UserID,
+		posted:      d.Posted,
+		caption:     d.Caption,
+	}
+}

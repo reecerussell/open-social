@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -48,6 +49,9 @@ func (m *Authentication) Handle(h http.Handler) http.Handler {
 			return
 		}
 
+		ctx := contextWithClaims(r.Context(), jwt.Claims)
+		r = r.WithContext(ctx)
+
 		h.ServeHTTP(w, r)
 	})
 }
@@ -73,4 +77,12 @@ func getAccessToken(r *http.Request) (string, error) {
 	}
 
 	return value[7:], nil
+}
+
+func contextWithClaims(ctx context.Context, claims gojwt.Claims) context.Context {
+	for k, v := range claims {
+		ctx = context.WithValue(ctx, core.ContextKey(k), v)
+	}
+
+	return ctx
 }

@@ -13,6 +13,7 @@ services:
         environment:
             USERS_API_URL: http://users:80
             AUTH_API_URL: http://auth:80
+            POSTS_API_URL: http://posts:80
             TOKEN_PUBLIC_KEY: /app/token-rsa.dev.pub
         volumes:
             - ./token-rsa.dev.pub:/app/token-rsa.dev.pub
@@ -23,6 +24,7 @@ services:
         depends_on:
             - users
             - auth
+            - posts
 
     users:
         image: reecerussell/open-social-users
@@ -44,6 +46,19 @@ services:
             TOKEN_PRIVATE_KEY: /app/token-rsa.dev.pem
         volumes:
             - ./token-rsa.dev.pem:/app/token-rsa.dev.pem
+        networks:
+            - open-social
+        depends_on:
+            - users
+
+    posts:
+        image: reecerussell/open-social-posts
+        build:
+            context: .
+            dockerfile: ./service/posts/Dockerfile
+        environment:
+            CONNECTION_STRING: sqlserver://dev:cA6EfDrJdhVhtnb8@34.105.141.251?database=open-social-dev
+            USERS_API_URL: http://users:80
         networks:
             - open-social
         depends_on:

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: posts
+        name: posts
+    name: posts
+spec:
+    selector:
+        matchLabels:
+            app: posts
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: posts
+        spec:
+            containers:
+                - image: "reecerussell/open-social-posts"
+                  name: posts
+                  resources:
+                      limits:
+                          cpu: "100m"
+                          memory: "200Mi"
+                      requests:
+                          cpu: "20m"
+                          memory: "50Mi"
+                  ports:
+                      - containerPort: 80
+                        protocol: TCP
