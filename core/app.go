@@ -32,6 +32,10 @@ func (app *App) Get(path string, h http.Handler) {
 	app.r.Handle(path, h).Methods(http.MethodGet)
 }
 
+func (app *App) GetFunc(path string, h http.HandlerFunc) {
+	app.r.HandleFunc(path, h).Methods(http.MethodGet)
+}
+
 func (app *App) Post(path string, h http.Handler) {
 	app.r.Handle(path, h).Methods(http.MethodPost)
 }

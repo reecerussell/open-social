@@ -37,6 +37,7 @@ func main() {
 
 	app.PostFunc("/users/register", userHandler.Register)
 	app.PostFunc("/posts", postHandler.Create)
+	app.GetFunc("/feed", postHandler.GetFeed)
 
 	go app.Serve()
 

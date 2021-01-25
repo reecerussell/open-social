@@ -7,6 +7,7 @@ package repository
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
+	dto "github.com/reecerussell/open-social/service/posts/dto"
 	model "github.com/reecerussell/open-social/service/posts/model"
 	reflect "reflect"
 )
@@ -46,4 +47,19 @@ func (m *MockPostRepository) Create(ctx context.Context, p *model.Post) error {
 func (mr *MockPostRepositoryMockRecorder) Create(ctx, p interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockPostRepository)(nil).Create), ctx, p)
+}
+
+// GetFeed mocks base method.
+func (m *MockPostRepository) GetFeed(ctx context.Context, userReferenceID string) ([]*dto.FeedItem, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFeed", ctx, userReferenceID)
+	ret0, _ := ret[0].([]*dto.FeedItem)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFeed indicates an expected call of GetFeed.
+func (mr *MockPostRepositoryMockRecorder) GetFeed(ctx, userReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFeed", reflect.TypeOf((*MockPostRepository)(nil).GetFeed), ctx, userReferenceID)
 }

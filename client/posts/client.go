@@ -12,6 +12,7 @@ import (
 // Client is an interface used to interact with the posts API.
 type Client interface {
 	Create(in *CreateRequest) (*CreateResponse, error)
+	GetFeed(userReferenceID string) ([]*FeedItem, error)
 }
 
 type client struct {
@@ -49,6 +50,35 @@ func (c *client) Create(in *CreateRequest) (*CreateResponse, error) {
 		}
 
 		return &data, nil
+	}
+
+	var data clientpkg.ErrorResponse
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, clientpkg.NewError(resp.StatusCode, data.Message)
+}
+
+func (c *client) GetFeed(userReferenceID string) ([]*FeedItem, error) {
+	url := c.url + "/feed/" + userReferenceID
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		var data []*FeedItem
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return nil, err
+		}
+
+		return data, nil
 	}
 
 	var data clientpkg.ErrorResponse

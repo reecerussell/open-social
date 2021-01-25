@@ -60,3 +60,23 @@ func (h *PostHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	h.Respond(w, response)
 }
+
+// GetFeed returns a user's feed.
+func (h *PostHandler) GetFeed(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	feed, err := h.client.GetFeed(userID)
+	if err != nil {
+		switch e := err.(type) {
+		case *users.Error:
+			h.RespondError(w, e, e.StatusCode)
+			return
+		default:
+			h.RespondError(w, err, http.StatusInternalServerError)
+			return
+		}
+	}
+
+	h.Respond(w, feed)
+}

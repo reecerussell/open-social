@@ -20,9 +20,11 @@ func main() {
 	ctn := buildServices()
 
 	createPost := ctn.GetService("CreatePostHandler").(*handler.CreatePostHandler)
+	feedhandler := ctn.GetService("FeedHandler").(*handler.FeedHandler)
 
 	app := core.NewApp("0.0.0.0:80")
 	app.Post("/posts", createPost)
+	app.Get("/feed/{userReferenceId}", feedhandler)
 	app.HealthCheck(core.HealthCheckHandler)
 
 	go app.Serve()
@@ -52,6 +54,12 @@ func buildServices() *core.Container {
 		client := ctn.GetService("UserClient").(users.Client)
 
 		return handler.NewCreatePostHandler(repo, client)
+	})
+
+	ctn.AddService("FeedHandler", func(ctn *core.Container) interface{} {
+		repo := ctn.GetService("PostRepository").(repository.PostRepository)
+
+		return handler.NewFeedHandler(repo)
 	})
 
 	return ctn
