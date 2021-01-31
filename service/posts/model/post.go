@@ -18,6 +18,7 @@ type Post struct {
 	id          int
 	referenceID string
 	userID      int
+	mediaID     *int
 	posted      time.Time
 	caption     string
 }
@@ -25,10 +26,11 @@ type Post struct {
 // NewPost returns a new instance of the Post domain model,
 // providing the given data is valid. This function assumes
 // userID is a valid user id.
-func NewPost(userID int, caption string) (*Post, error) {
+func NewPost(userID int, mediaID *int, caption string) (*Post, error) {
 	p := &Post{
-		userID: userID,
-		posted: time.Now().UTC(),
+		userID:  userID,
+		mediaID: mediaID,
+		posted:  time.Now().UTC(),
 	}
 
 	err := p.updateCaption(caption)
@@ -75,6 +77,7 @@ func (p *Post) Dao() *dao.Post {
 	return &dao.Post{
 		ID:          p.id,
 		ReferenceID: p.referenceID,
+		MediaID:     p.mediaID,
 		UserID:      p.userID,
 		Posted:      p.posted,
 		Caption:     p.caption,
@@ -88,6 +91,7 @@ func PostFromDao(d *dao.Post) *Post {
 	return &Post{
 		id:          d.ID,
 		referenceID: d.ReferenceID,
+		mediaID:     d.MediaID,
 		userID:      d.UserID,
 		posted:      d.Posted,
 		caption:     d.Caption,

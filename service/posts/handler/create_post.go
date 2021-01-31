@@ -19,8 +19,9 @@ type CreatePostHandler struct {
 
 // CreatePostRequest is the body of a request.
 type CreatePostRequest struct {
-	UserReferenceID string `json:"userReferenceId"`
-	Caption         string `json:"caption"`
+	UserReferenceID string  `json:"userReferenceId"`
+	MediaID         *string `json:"mediaId"`
+	Caption         string  `json:"caption"`
 }
 
 // CreatePostResponse is the body of the response.

@@ -10,22 +10,24 @@ import (
 )
 
 func TestNewPost(t *testing.T) {
-	p, err := NewPost(123, "My first post  ")
+	testMediaID := 321
+	p, err := NewPost(123, &testMediaID, "My first post  ")
 	assert.NoError(t, err)
 	assert.Equal(t, 123, p.userID)
+	assert.Equal(t, testMediaID, *p.mediaID)
 	assert.Equal(t, "My first post", p.caption)
 }
 
 func TestPost_UpdateCaption_ReturnsError(t *testing.T) {
 	t.Run("Empty Caption", func(t *testing.T) {
-		p, err := NewPost(123, "")
+		p, err := NewPost(123, nil, "")
 		assert.Nil(t, p)
 		assert.Equal(t, "caption cannot be empty", err.Error())
 	})
 
 	t.Run("Long Caption", func(t *testing.T) {
 		str := make([]rune, maxCaptionLength+1)
-		p, err := NewPost(123, string(str))
+		p, err := NewPost(123, nil, string(str))
 		assert.Nil(t, p)
 
 		exp := fmt.Sprintf("caption cannot be greater than %d characters long", maxCaptionLength)
@@ -59,10 +61,12 @@ func TestPost_Dao(t *testing.T) {
 		testCaption     = "Hello World"
 	)
 	testPostedDate := time.Now().UTC()
+	testMediaID := 321
 
 	post := &Post{
 		id:          testPostID,
 		referenceID: testReferenceID,
+		mediaID:     &testMediaID,
 		userID:      testUserID,
 		posted:      testPostedDate,
 		caption:     testCaption,
@@ -73,6 +77,7 @@ func TestPost_Dao(t *testing.T) {
 	assert.Equal(t, testPostID, d.ID)
 	assert.Equal(t, testReferenceID, d.ReferenceID)
 	assert.Equal(t, testUserID, d.UserID)
+	assert.Equal(t, testMediaID, *d.MediaID)
 	assert.Equal(t, testPostedDate, d.Posted)
 	assert.Equal(t, testCaption, d.Caption)
 }

@@ -8,6 +8,7 @@ import (
 type Post struct {
 	ID          int
 	ReferenceID string
+	MediaID     *int
 	UserID      int
 	Posted      time.Time
 	Caption     string

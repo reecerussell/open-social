@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	cloud.google.com/go v0.75.0 // indirect
-	cloud.google.com/go/storage v1.12.0 // indirect
+	cloud.google.com/go/storage v1.12.0
 	github.com/denisenkom/go-mssqldb v0.9.0
 	github.com/golang/mock v1.4.4
 	github.com/gorilla/mux v1.8.0

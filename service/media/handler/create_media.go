@@ -22,7 +22,8 @@ type CreateMediaRequest struct {
 
 // CreateMediaResponse is the body of the response.
 type CreateMediaResponse struct {
-	ID int `json:"id"`
+	ID          int    `json:"id"`
+	ReferenceID string `json:"referenceId"`
 }
 
 // NewCreateMediaHandler returns a new instance of CreateMediaHandler.
@@ -49,7 +50,8 @@ func (h *CreateMediaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := CreateMediaResponse{
-		ID: media.ID(),
+		ID:          media.ID(),
+		ReferenceID: media.ReferenceID(),
 	}
 
 	h.Respond(w, resp)

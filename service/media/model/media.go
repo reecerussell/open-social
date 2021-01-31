@@ -37,6 +37,11 @@ func (m *Media) ID() int {
 	return m.id
 }
 
+// ReferenceID returns the media's reference id.
+func (m *Media) ReferenceID() string {
+	return m.referenceID
+}
+
 func (m *Media) setContentType(contentType string) error {
 	if contentType == "" {
 		return errors.New("contentType is a required field")

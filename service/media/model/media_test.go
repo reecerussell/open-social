@@ -90,3 +90,11 @@ func TestMedia_ID(t *testing.T) {
 
 	assert.Equal(t, testID, m.ID())
 }
+
+func TestMedia_ReferenceID(t *testing.T) {
+	const testReferenceID = "123"
+
+	m := &Media{referenceID: testReferenceID}
+
+	assert.Equal(t, testReferenceID, m.ReferenceID())
+}

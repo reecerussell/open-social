@@ -9,9 +9,12 @@ import (
 	"github.com/reecerussell/gojwt/rsa"
 
 	"github.com/reecerussell/open-social/client/auth"
+	mediaSdk "github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
 	"github.com/reecerussell/open-social/client/users"
 	"github.com/reecerussell/open-social/core"
+	"github.com/reecerussell/open-social/core/media"
+	"github.com/reecerussell/open-social/core/media/gcp"
 	"github.com/reecerussell/open-social/service/backend/handler"
 	"github.com/reecerussell/open-social/service/backend/middleware"
 )
@@ -20,7 +23,9 @@ const (
 	usersAPIVar       = "USERS_API_URL"
 	authAPIVar        = "AUTH_API_URL"
 	postsAPIVar       = "POSTS_API_URL"
+	mediaAPIVar       = "MEDIA_API_URL"
 	tokenPublicKeyVar = "TOKEN_PUBLIC_KEY"
+	bucketName        = "MEDIA_BUCKET"
 )
 
 func main() {
@@ -70,6 +75,12 @@ func buildServices() *core.Container {
 		return client
 	})
 
+	ctn.AddService("MediaClient", func(ctn *core.Container) interface{} {
+		url := os.Getenv(mediaAPIVar)
+		client := mediaSdk.New(url)
+		return client
+	})
+
 	ctn.AddService("AuthMiddleware", func(ctn *core.Container) interface{} {
 		path := os.Getenv(tokenPublicKeyVar)
 		alg, err := rsa.NewFromFile(path, crypto.SHA256)
@@ -81,6 +92,12 @@ func buildServices() *core.Container {
 		return h
 	})
 
+	ctn.AddService("MediaService", func(ctn *core.Container) interface{} {
+		svc := gcp.New(os.Getenv(bucketName))
+
+		return svc
+	})
+
 	ctn.AddService("UserHandler", func(ctn *core.Container) interface{} {
 		client := ctn.GetService("UserClient").(users.Client)
 		authClient := ctn.GetService("AuthClient").(auth.Client)
@@ -90,7 +107,9 @@ func buildServices() *core.Container {
 
 	ctn.AddService("PostHandler", func(ctn *core.Container) interface{} {
 		client := ctn.GetService("PostClient").(posts.Client)
-		h := handler.NewPostHandler(client)
+		mediaSvc := ctn.GetService("MediaService").(media.Service)
+		mediaClient := ctn.GetService("MediaClient").(mediaSdk.Client)
+		h := handler.NewPostHandler(client, mediaSvc, mediaClient)
 		return h
 	})
 

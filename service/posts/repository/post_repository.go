@@ -32,8 +32,8 @@ func (r *postRepository) Create(ctx context.Context, p *model.Post) error {
 		return err
 	}
 
-	const query = `INSERT INTO [Posts] ([ReferenceId],[UserId],[Posted],[Caption])
-					VALUES (NEWID(), @userId, @posted, @caption)
+	const query = `INSERT INTO [Posts] ([ReferenceId],[UserId],[MediaId],[Posted],[Caption])
+					VALUES (NEWID(), @userId, @mediaId, @posted, @caption)
 				SELECT [Id], CAST([ReferenceId] AS CHAR(36)) FROM [Posts] WHERE [Id] = SCOPE_IDENTITY()`
 
 	stmt, err := db.PrepareContext(ctx, query)
@@ -45,6 +45,7 @@ func (r *postRepository) Create(ctx context.Context, p *model.Post) error {
 	post := p.Dao()
 	row := stmt.QueryRowContext(ctx,
 		sql.Named("userId", post.UserID),
+		sql.Named("mediaId", post.MediaID),
 		sql.Named("posted", post.Posted),
 		sql.Named("caption", post.Caption))
 
@@ -69,7 +70,8 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 
 	const query = `;WITH [Feed] AS (
 		SELECT 
-			[P].[ReferenceId], 
+			[P].[ReferenceId] AS [ReferenceId],
+			[M].[ReferenceId] AS [MediaReferenceId],
 			[P].[Caption], 
 			[P].[Posted],
 			[U].[Username],
@@ -77,10 +79,12 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 			[dbo].HasUserLikedPost([P].[Id], [U].[Id]) AS [HasUserLiked]
 		FROM [Posts] AS [P]
 		INNER JOIN [Users] AS [U] ON [U].[Id] = [P].[UserId]
+		LEFT JOIN [Media] AS [M] ON [M].[Id] = [P].[MediaId]
 		WHERE [U].[ReferenceId] = @userReference
 		UNION
 		SELECT
-			[P].[ReferenceId],
+			[P].[ReferenceId] AS [ReferenceId],
+			[M].[ReferenceId] AS [MediaReferenceId],
 			[P].[Caption],
 			[P].[Posted],
 			[U].[Username],
@@ -89,9 +93,18 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 		FROM [UserFollowers] AS [UF]
 		INNER JOIN [Posts] AS [P] ON [P].[UserId] = [UF].[FollowerId]
 		INNER JOIN [Users] AS [U] ON [U].[Id] = [P].[UserId]
+		LEFT JOIN [Media] AS [M] ON [M].[Id] = [P].[MediaId]
 		WHERE [U].[ReferenceId] = @userReference)
 		
-		SELECT CAST([ReferenceId] AS CHAR(36)), [Caption], [Posted], [Username], [Likes], [HasUserLiked] FROM [Feed]
+		SELECT 
+			CAST([ReferenceId] AS CHAR(36)),
+			CAST([MediaReferenceId] AS CHAR(36)),
+			[Caption],
+			[Posted],
+			[Username],
+			[Likes],
+			[HasUserLiked] 
+		FROM [Feed]
 		ORDER BY [Posted] DESC`
 
 	stmt, err := db.PrepareContext(ctx, query)
@@ -110,7 +123,14 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 
 	for rows.Next() {
 		var item dto.FeedItem
-		err := rows.Scan(&item.ID, &item.Caption, &item.Posted, &item.Username, &item.Likes, &item.HasUserLiked)
+		err := rows.Scan(
+			&item.ID,
+			&item.MediaID,
+			&item.Caption,
+			&item.Posted,
+			&item.Username,
+			&item.Likes,
+			&item.HasUserLiked)
 		if err != nil {
 			return nil, err
 		}

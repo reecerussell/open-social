@@ -21,11 +21,13 @@ func TestCreateMediaHandler(t *testing.T) {
 	defer ctrl.Finish()
 
 	const testID = 123
+	const testReferenceID = "247"
 
 	mockRepo := repository.NewMockMediaRepository(ctrl)
 	mockRepo.EXPECT().Create(gomock.Any(), gomock.Any()).
 		DoAndReturn(func(ctx context.Context, m *model.Media) error {
 			m.SetID(testID)
+			m.SetReferenceID(testReferenceID)
 
 			return nil
 		})
@@ -41,7 +43,7 @@ func TestCreateMediaHandler(t *testing.T) {
 	data := make([]byte, rr.Body.Len())
 	rr.Body.Read(data)
 
-	exp := fmt.Sprintf("{\"id\":%d}\n", testID)
+	exp := fmt.Sprintf("{\"id\":%d,\"referenceId\":\"%s\"}\n", testID, testReferenceID)
 	assert.Equal(t, exp, string(data))
 	assert.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, "application/json", rr.Header().Get("Content-Type"))

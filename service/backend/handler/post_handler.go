@@ -1,23 +1,31 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/reecerussell/open-social/client"
+	mediaSdk "github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
 	"github.com/reecerussell/open-social/client/users"
 	"github.com/reecerussell/open-social/core"
+	"github.com/reecerussell/open-social/core/media"
 )
 
 // PostHandler handles requests to the post domain.
 type PostHandler struct {
 	core.Handler
-	client posts.Client
+	client   posts.Client
+	uploader media.Service
+	media    mediaSdk.Client
 }
 
 // NewPostHandler returns a new instance of PostHandler.
-func NewPostHandler(client posts.Client) *PostHandler {
-	return &PostHandler{client: client}
+func NewPostHandler(client posts.Client, uploader media.Service, media mediaSdk.Client) *PostHandler {
+	return &PostHandler{
+		client:   client,
+		uploader: uploader,
+		media:    media,
+	}
 }
 
 // CreatePostRequest is the body of the request.
@@ -32,20 +40,58 @@ type CreatePostResponse struct {
 
 // Create handles requests to create a post.
 func (h *PostHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var data CreatePostRequest
-	_ = json.NewDecoder(r.Body).Decode(&data)
-	defer r.Body.Close()
+	r.ParseMultipartForm(10 << 20)
+
+	file, header, err := r.FormFile("file")
+	if err != nil && err != http.ErrMissingFile {
+		h.RespondError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	var mediaID *int
 
 	ctx := r.Context()
+	if err != http.ErrMissingFile {
+		defer file.Close()
+
+		fileData := make([]byte, header.Size)
+		file.Read(fileData)
+		contentType := http.DetectContentType(fileData)
+
+		m, err := h.media.Create(&mediaSdk.CreateRequest{
+			ContentType: contentType,
+		})
+		if err != nil {
+			switch e := err.(type) {
+			case *client.Error:
+				h.RespondError(w, e, e.StatusCode)
+				return
+			default:
+				h.RespondError(w, err, http.StatusInternalServerError)
+				return
+			}
+		}
+
+		mediaID = &m.ID
+
+		err = h.uploader.Upload(ctx, m.ReferenceID, fileData)
+		if err != nil {
+			// TODO: delete new media record @ m.ID
+			h.RespondError(w, err, http.StatusInternalServerError)
+			return
+		}
+	}
+
 	userID := ctx.Value(core.ContextKey("uid")).(string)
 
 	post, err := h.client.Create(&posts.CreateRequest{
 		UserReferenceID: userID,
-		Caption:         data.Caption,
+		MediaID:         mediaID,
+		Caption:         r.FormValue("caption"),
 	})
 	if err != nil {
 		switch e := err.(type) {
-		case *users.Error:
+		case *client.Error:
 			h.RespondError(w, e, e.StatusCode)
 			return
 		default:
