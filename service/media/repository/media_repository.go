@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/reecerussell/open-social/service/media/model"
 
@@ -10,9 +11,15 @@ import (
 	_ "github.com/denisenkom/go-mssqldb"
 )
 
+// Common errors
+var (
+	ErrMediaNotFound = errors.New("media not found")
+)
+
 // MediaRepository is used to interface with the media data store.
 type MediaRepository interface {
 	Create(ctx context.Context, m *model.Media) (func(bool), error)
+	GetContentType(ctx context.Context, referenceID string) (string, error)
 }
 
 type mediaRepository struct {
@@ -75,4 +82,31 @@ func save(tx *sql.Tx) func(bool) {
 			panic(err)
 		}
 	}
+}
+
+func (r *mediaRepository) GetContentType(ctx context.Context, referenceID string) (string, error) {
+	db, err := sql.Open("sqlserver", r.url)
+	if err != nil {
+		return "", err
+	}
+
+	const query = `SELECT [ContentType] FROM [Media] WHERE [ReferenceId] = @referenceId;`
+
+	stmt, err := db.PrepareContext(ctx, query)
+	if err != nil {
+		return "", err
+	}
+	defer stmt.Close()
+
+	var contentType string
+	err = stmt.QueryRowContext(ctx, sql.Named("referenceId", referenceID)).Scan(&contentType)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", ErrMediaNotFound
+		}
+
+		return "", err
+	}
+
+	return contentType, nil
 }

@@ -48,3 +48,18 @@ func (mr *MockMediaRepositoryMockRecorder) Create(ctx, m interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockMediaRepository)(nil).Create), ctx, m)
 }
+
+// GetContentType mocks base method.
+func (m *MockMediaRepository) GetContentType(ctx context.Context, referenceID string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetContentType", ctx, referenceID)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetContentType indicates an expected call of GetContentType.
+func (mr *MockMediaRepositoryMockRecorder) GetContentType(ctx, referenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetContentType", reflect.TypeOf((*MockMediaRepository)(nil).GetContentType), ctx, referenceID)
+}

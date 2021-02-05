@@ -21,9 +21,11 @@ func main() {
 	ctn := buildServices()
 
 	createMedia := ctn.GetService("CreateMediaHandler").(*handler.CreateMediaHandler)
+	getMediaContent := ctn.GetService("CreateMediaHandler").(*handler.GetMediaContentHandler)
 
 	app := core.NewApp("0.0.0.0:80")
 	app.Post("/media", createMedia)
+	app.Get("/media/content/{referenceID}", getMediaContent)
 	app.HealthCheck(core.HealthCheckHandler)
 
 	go app.Serve()
@@ -53,6 +55,13 @@ func buildServices() *core.Container {
 		uploader := ctn.GetService("MediaService").(media.Service)
 
 		return handler.NewCreateMediaHandler(repo, uploader)
+	})
+
+	ctn.AddService("GetMediaContentHandler", func(ctn *core.Container) interface{} {
+		repo := ctn.GetService("MediaRepository").(repository.MediaRepository)
+		downloader := ctn.GetService("MediaService").(media.Service)
+
+		return handler.NewGetMediaContentHandler(repo, downloader)
 	})
 
 	return ctn
