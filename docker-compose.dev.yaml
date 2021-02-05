@@ -5,6 +5,18 @@ networks:
         driver: bridge
 
 services:
+    ingress:
+        image: nginx
+        volumes:
+            - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+        ports:
+            - 80:80
+        networks:
+            - open-social
+        depends_on: 
+            - backend
+            - media-download
+
     backend:
         image: reecerussell/open-social-backend
         build:
@@ -18,8 +30,6 @@ services:
             TOKEN_PUBLIC_KEY: /app/token-rsa.dev.pub
         volumes:
             - ./token-rsa.dev.pub:/app/token-rsa.dev.pub
-        ports:
-            - 80:80
         networks:
             - open-social
         depends_on:
@@ -79,3 +89,15 @@ services:
             - ~/.gcp/media-account.json:/cred/media-account.json
         networks:
             - open-social
+
+    media-download:
+        image: reecerussell/open-social-media-download
+        build:
+            context: .
+            dockerfile: ./cmd/media-download/Dockerfile
+        environment:
+            MEDIA_API_URL: http://media
+        networks:
+            - open-social
+        depends_on:
+            - media

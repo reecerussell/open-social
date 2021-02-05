@@ -21,7 +21,7 @@ func main() {
 	ctn := buildServices()
 
 	createMedia := ctn.GetService("CreateMediaHandler").(*handler.CreateMediaHandler)
-	getMediaContent := ctn.GetService("CreateMediaHandler").(*handler.GetMediaContentHandler)
+	getMediaContent := ctn.GetService("GetMediaContentHandler").(*handler.GetMediaContentHandler)
 
 	app := core.NewApp("0.0.0.0:80")
 	app.Post("/media", createMedia)
