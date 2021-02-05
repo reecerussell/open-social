@@ -10,7 +10,7 @@ const Layout = ({ children }) => (
 						<div className="post-user-info">
 							<a href="/">
 								<div
-									class="post-user-image"
+									className="post-user-image"
 									style={{
 										backgroundImage:
 											"url(https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png)",
@@ -18,11 +18,11 @@ const Layout = ({ children }) => (
 								></div>
 							</a>
 							<p>
-								<a class="text-secondary" href="/">
+								<a className="text-secondary" href="/">
 									<b>test-username</b>
 								</a>
 								<br />
-								<span class="text-muted">6 Followers</span>
+								<span className="text-muted">6 Followers</span>
 							</p>
 						</div>
 					</div>
@@ -30,17 +30,17 @@ const Layout = ({ children }) => (
 					<ListGroup flush className="border-top">
 						<ListGroupItem>
 							<a href="/" className="d-block text-secondary">
-								<i class="fas fa-stream"></i> Feed
+								<i className="fas fa-stream"></i> Feed
 							</a>
 						</ListGroupItem>
 						<ListGroupItem>
 							<a href="/" className="d-block text-secondary">
-								<i class="fas fa-user-alt"></i> Profile
+								<i className="fas fa-user-alt"></i> Profile
 							</a>
 						</ListGroupItem>
 						<ListGroupItem>
 							<a href="/" className="d-block text-secondary">
-								<i class="fas fa-sign-out-alt"></i> Logout
+								<i className="fas fa-sign-out-alt"></i> Logout
 							</a>
 						</ListGroupItem>
 					</ListGroup>

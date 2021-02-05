@@ -10,7 +10,7 @@ export const fetchFeed = () => dispatch => {
                 throw new Error(res.error);
             }
 
-            dispatch(actions.loadFeedSuccess(res.data));
+            dispatch(actions.loadFeedSuccess(res.data ?? []));
         })
         .catch(err => dispatch(actions.loadFeedError(err.toString())));
 };

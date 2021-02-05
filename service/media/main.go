@@ -6,12 +6,15 @@ import (
 	"os/signal"
 
 	"github.com/reecerussell/open-social/core"
+	"github.com/reecerussell/open-social/core/media"
+	"github.com/reecerussell/open-social/core/media/gcp"
 	"github.com/reecerussell/open-social/service/media/handler"
 	"github.com/reecerussell/open-social/service/media/repository"
 )
 
 const (
 	connectionStringVar = "CONNECTION_STRING"
+	mediaBucketVar      = "MEDIA_BUCKET"
 )
 
 func main() {
@@ -40,10 +43,16 @@ func buildServices() *core.Container {
 		return repository.NewMediaRepository(url)
 	})
 
+	ctn.AddService("MediaService", func(ctn *core.Container) interface{} {
+		uploader := gcp.New(os.Getenv(mediaBucketVar))
+		return uploader
+	})
+
 	ctn.AddService("CreateMediaHandler", func(ctn *core.Container) interface{} {
 		repo := ctn.GetService("MediaRepository").(repository.MediaRepository)
+		uploader := ctn.GetService("MediaService").(media.Service)
 
-		return handler.NewCreateMediaHandler(repo)
+		return handler.NewCreateMediaHandler(repo, uploader)
 	})
 
 	return ctn

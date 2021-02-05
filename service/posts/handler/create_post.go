@@ -19,9 +19,9 @@ type CreatePostHandler struct {
 
 // CreatePostRequest is the body of a request.
 type CreatePostRequest struct {
-	UserReferenceID string  `json:"userReferenceId"`
-	MediaID         *string `json:"mediaId"`
-	Caption         string  `json:"caption"`
+	UserReferenceID string `json:"userReferenceId"`
+	MediaID         *int   `json:"mediaId"`
+	Caption         string `json:"caption"`
 }
 
 // CreatePostResponse is the body of the response.
@@ -48,7 +48,7 @@ func (h *CreatePostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post, err := model.NewPost(*userID, data.Caption)
+	post, err := model.NewPost(*userID, data.MediaID, data.Caption)
 	if err != nil {
 		h.RespondError(w, err, http.StatusBadRequest)
 		return

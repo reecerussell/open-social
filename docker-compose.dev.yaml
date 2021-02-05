@@ -16,10 +16,8 @@ services:
             POSTS_API_URL: http://posts:80
             MEDIA_API_URL: http://media:80
             TOKEN_PUBLIC_KEY: /app/token-rsa.dev.pub
-            GOOGLE_APPLICATION_CREDENTIALS: /cred/media-account.json
         volumes:
             - ./token-rsa.dev.pub:/app/token-rsa.dev.pub
-            - ~/.gcp/media-account.json:/cred/media-account.json
         ports:
             - 80:80
         networks:
@@ -36,7 +34,7 @@ services:
             context: .
             dockerfile: ./service/users/Dockerfile
         environment:
-            CONNECTION_STRING: sqlserver://dev:cA6EfDrJdhVhtnb8@34.105.141.251?database=open-social-dev
+            CONNECTION_STRING: ${CONNECTION_STRING}
         networks:
             - open-social
 
@@ -61,19 +59,23 @@ services:
             context: .
             dockerfile: ./service/posts/Dockerfile
         environment:
-            CONNECTION_STRING: sqlserver://dev:cA6EfDrJdhVhtnb8@34.105.141.251?database=open-social-dev
+            CONNECTION_STRING: ${CONNECTION_STRING}
             USERS_API_URL: http://users:80
         networks:
             - open-social
         depends_on:
             - users
 
-    posts:
+    media:
         image: reecerussell/open-social-media
         build:
             context: .
             dockerfile: ./service/media/Dockerfile
         environment:
-            CONNECTION_STRING: sqlserver://dev:cA6EfDrJdhVhtnb8@34.105.141.251?database=open-social-dev
+            CONNECTION_STRING: ${CONNECTION_STRING}
+            MEDIA_BUCKET: open-social-media
+            GOOGLE_APPLICATION_CREDENTIALS: /cred/media-account.json
+        volumes:
+            - ~/.gcp/media-account.json:/cred/media-account.json
         networks:
             - open-social

@@ -31,7 +31,7 @@ const Feed = ({ items, error, loading, fetchFeed }) => {
                             </a>
                         </b>{" "}
                         <a href="/" className="text-secondary">
-                            Hello World
+                            {item.caption}
                         </a>
                         <br />
                         <small>
@@ -57,12 +57,13 @@ Feed.propTypes = {
             hasUserLiked: PropTypes.bool.isRequired,
         }).isRequired
     ),
-    error: PropTypes.string.isRequired,
+    error: PropTypes.string,
     loading: PropTypes.bool.isRequired,
     fetchFeed: PropTypes.func.isRequired,
 };
 
-Feed.propTypes = {
+Feed.defaultProps = {
+    items: [],
     error: null,
 };
 

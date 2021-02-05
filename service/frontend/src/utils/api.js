@@ -13,6 +13,13 @@ const post = async (url, body, options) =>
         ...options,
     });
 
+const postForm = async (url, formData, options) =>
+    await send(url, {
+        method: "POST",
+        body: formData,
+        ...options,
+    });
+
 const send = async (url, options) => {
     const dest = env.apiUrl + url;
 
@@ -37,7 +44,7 @@ const send = async (url, options) => {
                     const error = await res.json();
                     return {
                         ok: false,
-                        error: error.error,
+                        error: error.message,
                     };
                 } catch (e) {
                     console.error(
@@ -62,4 +69,4 @@ const send = async (url, options) => {
     }
 };
 
-export { get, post };
+export { get, post, postForm };

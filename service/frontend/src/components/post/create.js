@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -7,15 +7,29 @@ import { Textarea } from "../form";
 
 const defaultState = {
     caption: "",
+    file: null,
 };
+const defaultImageUploadText = "Upload An Image!";
 
 const Create = ({ error, loading, submitPost }) => {
     const [post, setPost] = useState(defaultState);
+    const [imageUploadText, setImageUploadText] = useState(
+        defaultImageUploadText
+    );
+
+    const fileRef = useRef(null);
 
     const handleSubmit = e => {
         e.preventDefault();
 
-        submitPost(post);
+        const formData = new FormData()
+        formData.append("caption", post.caption)
+
+        if (post.file) {
+            formData.append("file", post.file, post.file.name)
+        }
+
+        submitPost(formData);
     };
 
     const handleUpdate = e => {
@@ -25,11 +39,28 @@ const Create = ({ error, loading, submitPost }) => {
         setPost(newState);
     };
 
+    const handleFileUpdate = e => {
+        const { files } = e.target;
+
+        if (files.length > 0) {
+            setImageUploadText(files[0].name);
+            setPost({...post, file: files[0]})
+        } else {
+            setImageUploadText(defaultImageUploadText);
+            setPost({...post, file: null})
+        }
+    };
+
+    const selectFileBtnClick = e => {
+        e.preventDefault();
+        fileRef.current.click();
+    };
+
     return (
         <div className="section p-4" id="createPost">
             <h1 className="header-1">Create a Post</h1>
             <p className="text-center small info">
-                Make a post to your Social Media account. Upload and image, just
+                Make a post to your Social Media account. Upload an image, just
                 a caption, or both!
             </p>
             <hr />
@@ -46,6 +77,19 @@ const Create = ({ error, loading, submitPost }) => {
                 />
                 <div className="form-group">
                     <div className="button-group float-right">
+                        <input
+                            type="file"
+                            className="d-none"
+                            ref={fileRef}
+                            onChange={handleFileUpdate}
+                        />
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={selectFileBtnClick}
+                        >
+                            {imageUploadText}
+                        </button>
                         <button
                             type="submit"
                             className="btn btn-primary"
