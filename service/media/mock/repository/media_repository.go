@@ -35,11 +35,12 @@ func (m *MockMediaRepository) EXPECT() *MockMediaRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m_2 *MockMediaRepository) Create(ctx context.Context, m *model.Media) error {
+func (m_2 *MockMediaRepository) Create(ctx context.Context, m *model.Media) (func(bool), error) {
 	m_2.ctrl.T.Helper()
 	ret := m_2.ctrl.Call(m_2, "Create", ctx, m)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(func(bool))
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
