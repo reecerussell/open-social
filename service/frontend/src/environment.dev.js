@@ -1,5 +1,6 @@
 const env = {
-    apiUrl: "http://localhost/",
+    mediaUrl: "http://localhost/media/",
+    apiUrl: "http://localhost/api/",
 };
 
 export default env;

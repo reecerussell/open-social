@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as api from "../../api/feed";
+import { Image } from "../shared";
 
 const Feed = ({ items, error, loading, fetchFeed }) => {
     useEffect(() => {
@@ -11,6 +12,12 @@ const Feed = ({ items, error, loading, fetchFeed }) => {
 
     return items.map((item, key) => (
         <div className="section mb-4" key={key}>
+            {item.mediaId && (
+                <a href="/">
+                    <Image id={item.mediaId} className="img-fluid" />
+                </a>
+            )}
+
             <div className="p-4">
                 <div className="post-user-info">
                     <p>

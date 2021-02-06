@@ -13,7 +13,7 @@ services:
             - 80:80
         networks:
             - open-social
-        depends_on: 
+        depends_on:
             - backend
             - media-download
 
