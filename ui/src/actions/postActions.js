@@ -27,3 +27,17 @@ export const likePostError = error => ({
     type: types.LIKE_POST_ERROR,
     error: error,
 });
+
+export const loadPost = () => ({
+    type: types.LOAD_POST,
+});
+
+export const loadPostSuccess = post => ({
+    type: types.LOAD_POST_SUCCESS,
+    post: post,
+});
+
+export const loadPostError = error => ({
+    type: types.LOAD_POST_ERROR,
+    error: error,
+});

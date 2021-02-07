@@ -1,3 +1,4 @@
 import Create from "./create";
+import Post from "./post";
 
-export { Create };
+export { Create, Post };

@@ -134,7 +134,7 @@ func (c *client) Get(postReferenceID, userReferenceID string) (*Post, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusOK {
+	if resp.StatusCode != http.StatusOK {
 		var data clientpkg.ErrorResponse
 		err = json.NewDecoder(resp.Body).Decode(&data)
 		if err != nil {

@@ -37,8 +37,8 @@ func (p *postProvider) Get(ctx context.Context, postReferenceID, userReferenceID
 		)
 		
 		SELECT
-			[P].[ReferenceId] AS [Id],
-			[M].[ReferenceId] AS [MediaId],
+			CAST([P].[ReferenceId] AS CHAR(36)) AS [Id],
+			CAST([M].[ReferenceId] AS CHAR(36)) AS [MediaId],
 			[P].[Posted],
 			[U].[Username],
 			[P].[Caption],

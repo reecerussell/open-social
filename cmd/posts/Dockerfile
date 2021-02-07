@@ -6,7 +6,7 @@ COPY . .
 
 RUN go mod download
 
-WORKDIR /go/src/github.com/reecerussell/open-social/service/posts
+WORKDIR /go/src/github.com/reecerussell/open-social/cmd/posts
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app/main main.go
 

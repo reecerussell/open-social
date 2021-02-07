@@ -1,5 +1,5 @@
 import Feed from "./components/feed";
-import { Create } from "./components/post";
+import { Create, Post } from "./components/post";
 import { Layout } from "./components/layout";
 
 const routes = [
@@ -13,6 +13,11 @@ const routes = [
         path: "/post",
         exact: true,
         component: Create,
+        layout: Layout,
+    },
+    {
+        path: "/post/:id",
+        component: Post,
         layout: Layout,
     },
 ];

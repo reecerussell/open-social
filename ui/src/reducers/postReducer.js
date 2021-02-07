@@ -28,10 +28,30 @@ const postReducer = (state = initialState.post, action) => {
         case types.LIKE_POST_SUCCESS:
             return {
                 ...state,
+                hasLiked: true,
+                likes: state.likes + 1,
                 loading: false,
                 error: null,
             };
         case types.LIKE_POST_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
+        case types.LOAD_POST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case types.LOAD_POST_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                ...action.post,
+            };
+        case types.LOAD_POST_ERROR:
             return {
                 ...state,
                 error: action.error,

@@ -1,5 +1,5 @@
-import { post, postForm } from "../utils/api";
-import { postActions, feedActions } from "../actions";
+import { post, postForm, get } from "../utils/api";
+import { postActions } from "../actions";
 
 export const submitPost = data => dispatch => {
     dispatch(postActions.createPost());
@@ -17,7 +17,6 @@ export const submitPost = data => dispatch => {
 
 export const likePost = id => dispatch => {
     dispatch(postActions.likePost());
-    //dispatch(feedActions.likeFeedPost());
 
     return post("posts/like/" + id, null)
         .then(res => {
@@ -26,10 +25,20 @@ export const likePost = id => dispatch => {
             }
 
             dispatch(postActions.likePostSuccess(id));
-            //dispatch(feedActions.likeFeedPostSuccess(id));
         })
-        .catch(err => {
-            dispatch(postActions.likePostError(err.toString()));
-            //dispatch(feedActions.likeFeedPostError(err.toString()));
-        });
+        .catch(err => dispatch(postActions.likePostError(err.toString())));
+};
+
+export const loadPost = id => dispatch => {
+    dispatch(postActions.loadPost());
+
+    return get("posts/" + id)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.error);
+            }
+
+            dispatch(postActions.loadPostSuccess(res.data));
+        })
+        .catch(err => dispatch(postActions.loadPostError(err.toString())));
 };

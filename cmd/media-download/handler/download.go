@@ -5,8 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/media"
-	"github.com/reecerussell/open-social/core"
 )
 
 // DownloadHandler is a http.Handler used to download media.

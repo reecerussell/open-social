@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/signal"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/cmd/media-download/handler"
-	"github.com/reecerussell/open-social/core"
 )
 
 const (
@@ -20,7 +20,8 @@ func main() {
 	downloadHandler := ctn.GetService("DownloadHandler").(*handler.DownloadHandler)
 
 	app := core.NewApp("0.0.0.0:80")
-	app.HealthCheck(core.HealthCheckHandler)
+	app.AddMiddleware(core.NewLoggingMiddleware())
+
 	app.Get("/{referenceID}", downloadHandler)
 
 	go app.Serve()

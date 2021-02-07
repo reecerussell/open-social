@@ -2,11 +2,7 @@ FROM golang:alpine AS build
 
 WORKDIR /go/src/github.com/reecerussell/open-social
 
-COPY client/ client/
-COPY core/ core/
-COPY util/ util/
-COPY cmd/media-download cmd/media-download/
-COPY go.mod go.sum ./
+COPY . .
 
 RUN go mod download
 

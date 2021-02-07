@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { feedApi, postApi } from "../../api";
@@ -31,30 +32,42 @@ const Feed = ({ items, error, loading, fetchFeed, likePost }) => {
             <div className="p-4">
                 <div className="post-user-info">
                     <p>
-                        <a href="/" className="text-secondary">
+                        <Link
+                            to={"/post/" + item.id}
+                            className="text-secondary"
+                        >
                             <b>
                                 {item.likes === 1
                                     ? item.likes + " Like"
                                     : item.likes + " Likes"}
                             </b>
-                        </a>{" "}
-                        <a href="/" className="text-secondary">
+                        </Link>{" "}
+                        <Link
+                            to={"/post/" + item.id}
+                            className="text-secondary"
+                        >
                             <b>0 Comments</b>
-                        </a>
+                        </Link>
                         <br />
                         <b>
                             <a href="/" className="text-secondary">
                                 {item.username}
                             </a>
                         </b>{" "}
-                        <a href="/" className="text-secondary">
+                        <Link
+                            to={"/post/" + item.id}
+                            className="text-secondary"
+                        >
                             {item.caption}
-                        </a>
+                        </Link>
                         <br />
                         <small>
-                            <a href="/" className="text-muted">
+                            <Link
+                                to={"/post/" + item.id}
+                                className="text-muted"
+                            >
                                 {item.posted}
-                            </a>
+                            </Link>
                         </small>
                     </p>
                 </div>
