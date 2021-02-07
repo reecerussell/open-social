@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/reecerussell/open-social/core/database"
+	"github.com/reecerussell/open-social/database"
 )
 
 // LikeRepository is a high level interface used to manipulate persisted post like data.

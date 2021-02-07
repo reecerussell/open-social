@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/auth"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/core"
 )
 
 // UserHandler handles requests to the user domain.

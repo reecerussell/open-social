@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/signal"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/core"
-	"github.com/reecerussell/open-social/core/database"
+	"github.com/reecerussell/open-social/database"
 	"github.com/reecerussell/open-social/service/posts/handler"
 	"github.com/reecerussell/open-social/service/posts/provider"
 	"github.com/reecerussell/open-social/service/posts/repository"

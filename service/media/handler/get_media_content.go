@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/reecerussell/open-social/core"
-	"github.com/reecerussell/open-social/core/media"
+	core "github.com/reecerussell/open-social"
+	"github.com/reecerussell/open-social/media"
 	"github.com/reecerussell/open-social/service/media/repository"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/reecerussell/open-social/core"
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/service/posts/repository"
 )
 

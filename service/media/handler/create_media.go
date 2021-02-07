@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/reecerussell/open-social/core"
-	"github.com/reecerussell/open-social/core/media"
+	core "github.com/reecerussell/open-social"
+	"github.com/reecerussell/open-social/media"
 	"github.com/reecerussell/open-social/service/media/model"
 	"github.com/reecerussell/open-social/service/media/repository"
 )

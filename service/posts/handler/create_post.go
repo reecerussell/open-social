@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/core"
 	"github.com/reecerussell/open-social/service/posts/model"
 	"github.com/reecerussell/open-social/service/posts/repository"
 )

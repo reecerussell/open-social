@@ -8,10 +8,10 @@ import (
 
 	"github.com/gorilla/mux"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client"
 	"github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
-	"github.com/reecerussell/open-social/core"
 )
 
 // PostHandler handles requests to the post domain.

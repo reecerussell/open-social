@@ -12,7 +12,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/core/mock/media"
+	"github.com/reecerussell/open-social/mock/media"
 	"github.com/reecerussell/open-social/service/media/mock/repository"
 	"github.com/reecerussell/open-social/service/media/model"
 )

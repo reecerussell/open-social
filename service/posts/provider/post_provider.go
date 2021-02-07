@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/reecerussell/open-social/core/database"
+	"github.com/reecerussell/open-social/database"
 	"github.com/reecerussell/open-social/service/posts/dto"
 )
 

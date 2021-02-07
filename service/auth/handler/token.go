@@ -7,8 +7,8 @@ import (
 
 	"github.com/reecerussell/gojwt"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/core"
 )
 
 // TokenHandler handles HTTP POST requests to generate an access token.

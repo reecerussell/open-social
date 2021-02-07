@@ -8,7 +8,7 @@ import (
 
 	"cloud.google.com/go/storage"
 
-	"github.com/reecerussell/open-social/core/media"
+	"github.com/reecerussell/open-social/media"
 )
 
 // bucket is an implementation of media.Service for Google Cloud Platform's storage buckets.

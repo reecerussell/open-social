@@ -7,7 +7,7 @@ import (
 
 	"github.com/reecerussell/gojwt"
 
-	"github.com/reecerussell/open-social/core"
+	core "github.com/reecerussell/open-social"
 )
 
 var allowedPaths = []string{"/users/register"}

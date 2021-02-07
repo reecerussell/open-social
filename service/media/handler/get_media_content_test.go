@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/core/mock/media"
+	"github.com/reecerussell/open-social/mock/media"
 	repoMock "github.com/reecerussell/open-social/service/media/mock/repository"
 	"github.com/reecerussell/open-social/service/media/repository"
 )

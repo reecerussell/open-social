@@ -8,7 +8,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	mock "github.com/reecerussell/open-social/core/mock/database"
+	mock "github.com/reecerussell/open-social/mock/database"
 )
 
 func TestLikeRepository_Create_ReturnsNoError(t *testing.T) {

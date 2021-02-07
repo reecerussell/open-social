@@ -6,7 +6,7 @@ import (
 
 	hashpkg "github.com/reecerussell/adaptive-password-hasher"
 
-	"github.com/reecerussell/open-social/core"
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/service/users/repository"
 )
 

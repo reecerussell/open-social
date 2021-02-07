@@ -8,11 +8,11 @@ import (
 
 	"github.com/reecerussell/gojwt/rsa"
 
+	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/auth"
 	"github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/core"
 	"github.com/reecerussell/open-social/service/backend/handler"
 	"github.com/reecerussell/open-social/service/backend/middleware"
 )
