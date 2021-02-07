@@ -12,10 +12,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/posts/dao"
-	mock "github.com/reecerussell/open-social/service/posts/mock/repository"
-	"github.com/reecerussell/open-social/service/posts/model"
-	"github.com/reecerussell/open-social/service/posts/repository"
+	"github.com/reecerussell/open-social/cmd/posts/dao"
+	mock "github.com/reecerussell/open-social/cmd/posts/mock/repository"
+	"github.com/reecerussell/open-social/cmd/posts/model"
+	"github.com/reecerussell/open-social/cmd/posts/repository"
 )
 
 func TestLikePostHandler(t *testing.T) {

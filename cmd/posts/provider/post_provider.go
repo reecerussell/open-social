@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/reecerussell/open-social/cmd/posts/dto"
 	"github.com/reecerussell/open-social/database"
-	"github.com/reecerussell/open-social/service/posts/dto"
 )
 
 // Common errors

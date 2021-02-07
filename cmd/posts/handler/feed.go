@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 
 	core "github.com/reecerussell/open-social"
-	"github.com/reecerussell/open-social/service/posts/repository"
+	"github.com/reecerussell/open-social/cmd/posts/repository"
 )
 
 // FeedHandler is a http.Handler used to request a user's post feed.

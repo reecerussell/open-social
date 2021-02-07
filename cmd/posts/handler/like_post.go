@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	core "github.com/reecerussell/open-social"
-	"github.com/reecerussell/open-social/service/posts/repository"
+	"github.com/reecerussell/open-social/cmd/posts/repository"
 )
 
 // LikePostHandler is a http.Handler used to mark a post as liked by a user.

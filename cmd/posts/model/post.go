@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/reecerussell/open-social/service/posts/dao"
+	"github.com/reecerussell/open-social/cmd/posts/dao"
 )
 
 const (

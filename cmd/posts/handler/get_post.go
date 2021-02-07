@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 
 	core "github.com/reecerussell/open-social"
-	"github.com/reecerussell/open-social/service/posts/provider"
+	"github.com/reecerussell/open-social/cmd/posts/provider"
 )
 
 // GetPostHandler is a http.Handler used to get a post for a user.

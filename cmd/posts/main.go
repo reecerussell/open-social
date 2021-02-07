@@ -7,10 +7,10 @@ import (
 
 	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/users"
+	"github.com/reecerussell/open-social/cmd/posts/handler"
+	"github.com/reecerussell/open-social/cmd/posts/provider"
+	"github.com/reecerussell/open-social/cmd/posts/repository"
 	"github.com/reecerussell/open-social/database"
-	"github.com/reecerussell/open-social/service/posts/handler"
-	"github.com/reecerussell/open-social/service/posts/provider"
-	"github.com/reecerussell/open-social/service/posts/repository"
 )
 
 const (

@@ -6,8 +6,8 @@ import (
 
 	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/service/posts/model"
-	"github.com/reecerussell/open-social/service/posts/repository"
+	"github.com/reecerussell/open-social/cmd/posts/model"
+	"github.com/reecerussell/open-social/cmd/posts/repository"
 )
 
 // CreatePostHandler is a http.Handler used to handle POSt requests to create post records.

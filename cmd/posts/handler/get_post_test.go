@@ -12,9 +12,9 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/posts/dto"
-	mock "github.com/reecerussell/open-social/service/posts/mock/provider"
-	"github.com/reecerussell/open-social/service/posts/provider"
+	"github.com/reecerussell/open-social/cmd/posts/dto"
+	mock "github.com/reecerussell/open-social/cmd/posts/mock/provider"
+	"github.com/reecerussell/open-social/cmd/posts/provider"
 )
 
 func TestGetPostHandler(t *testing.T) {

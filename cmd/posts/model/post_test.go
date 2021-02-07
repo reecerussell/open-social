@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reecerussell/open-social/service/posts/dao"
+	"github.com/reecerussell/open-social/cmd/posts/dao"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	clientMock "github.com/reecerussell/open-social/client/mock/users"
-	repoMock "github.com/reecerussell/open-social/service/posts/mock/repository"
+	repoMock "github.com/reecerussell/open-social/cmd/posts/mock/repository"
 	"github.com/reecerussell/open-social/service/posts/model"
 )
 

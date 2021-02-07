@@ -13,8 +13,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/posts/dto"
-	repository "github.com/reecerussell/open-social/service/posts/mock/repository"
+	"github.com/reecerussell/open-social/cmd/posts/dto"
+	repository "github.com/reecerussell/open-social/cmd/posts/mock/repository"
 )
 
 func TestFeedHandler(t *testing.T) {
