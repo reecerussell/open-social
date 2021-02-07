@@ -13,8 +13,8 @@ import (
 	"github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/service/backend/handler"
-	"github.com/reecerussell/open-social/service/backend/middleware"
+	"github.com/reecerussell/open-social/cmd/backend/handler"
+	"github.com/reecerussell/open-social/cmd/backend/middleware"
 )
 
 const (
