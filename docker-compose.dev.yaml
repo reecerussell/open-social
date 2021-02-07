@@ -58,7 +58,7 @@ services:
         image: reecerussell/open-social-auth
         build:
             context: .
-            dockerfile: ./service/auth/Dockerfile
+            dockerfile: ./cmd/auth/Dockerfile
         environment:
             USERS_API_URL: http://users:80
             TOKEN_PRIVATE_KEY: /app/token-rsa.dev.pem

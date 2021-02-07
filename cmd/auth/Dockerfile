@@ -6,13 +6,13 @@ COPY . .
 
 RUN go mod download
 
-WORKDIR /go/src/github.com/reecerussell/open-social/service/auth
+WORKDIR /go/src/github.com/reecerussell/open-social/cmd/auth
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app/main main.go
 
 FROM scratch
 
-COPY --from=build /go/src/github.com/reecerussell/open-social/service/auth/config.json config.json
+COPY --from=build /go/src/github.com/reecerussell/open-social/cmd/auth/config.json config.json
 COPY --from=build /app/main main
 
 CMD ["./main"]

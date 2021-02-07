@@ -12,7 +12,7 @@ import (
 
 	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/client/users"
-	"github.com/reecerussell/open-social/service/auth/handler"
+	"github.com/reecerussell/open-social/cmd/auth/handler"
 	"github.com/reecerussell/open-social/util"
 )
 
