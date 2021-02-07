@@ -11,8 +11,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/users/mock/repository"
-	repo "github.com/reecerussell/open-social/service/users/repository"
+	"github.com/reecerussell/open-social/cmd/users/mock/repository"
+	repo "github.com/reecerussell/open-social/cmd/users/repository"
 )
 
 func TestGetIDByReferenceHandler(t *testing.T) {

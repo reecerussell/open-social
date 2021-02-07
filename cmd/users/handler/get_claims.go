@@ -7,7 +7,7 @@ import (
 	hashpkg "github.com/reecerussell/adaptive-password-hasher"
 
 	core "github.com/reecerussell/open-social"
-	"github.com/reecerussell/open-social/service/users/repository"
+	"github.com/reecerussell/open-social/cmd/users/repository"
 )
 
 // GetClaimsHandler is a http.Handler used to get a user's claim values,

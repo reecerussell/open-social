@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 
 	core "github.com/reecerussell/open-social"
-	"github.com/reecerussell/open-social/service/users/repository"
+	"github.com/reecerussell/open-social/cmd/users/repository"
 )
 
 // GetIDByReferenceHandler is a http.Handler which handles GET requests

@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/reecerussell/open-social/service/users/dao"
-	"github.com/reecerussell/open-social/service/users/model"
+	"github.com/reecerussell/open-social/cmd/users/dao"
+	"github.com/reecerussell/open-social/cmd/users/model"
 
 	// MSSQL driver
 	_ "github.com/denisenkom/go-mssqldb"

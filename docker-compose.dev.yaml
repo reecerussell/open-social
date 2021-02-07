@@ -27,7 +27,7 @@ services:
         image: reecerussell/open-social-backend
         build:
             context: .
-            dockerfile: ./service/backend/Dockerfile
+            dockerfile: ./cmd/backend/Dockerfile
         environment:
             USERS_API_URL: http://users:80
             AUTH_API_URL: http://auth:80
@@ -48,7 +48,7 @@ services:
         image: reecerussell/open-social-users
         build:
             context: .
-            dockerfile: ./service/users/Dockerfile
+            dockerfile: ./cmd/users/Dockerfile
         environment:
             CONNECTION_STRING: ${CONNECTION_STRING}
         networks:
@@ -73,7 +73,7 @@ services:
         image: reecerussell/open-social-posts
         build:
             context: .
-            dockerfile: ./service/posts/Dockerfile
+            dockerfile: ./cmd/posts/Dockerfile
         environment:
             CONNECTION_STRING: ${CONNECTION_STRING}
             USERS_API_URL: http://users:80
@@ -88,7 +88,7 @@ services:
         image: reecerussell/open-social-media
         build:
             context: .
-            dockerfile: ./service/media/Dockerfile
+            dockerfile: ./cmd/media/Dockerfile
         environment:
             CONNECTION_STRING: ${CONNECTION_STRING}
             MEDIA_BUCKET: open-social-media

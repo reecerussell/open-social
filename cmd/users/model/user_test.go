@@ -10,8 +10,8 @@ import (
 	hashermock "github.com/reecerussell/adaptive-password-hasher/mock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/users/dao"
-	"github.com/reecerussell/open-social/service/users/mock"
+	"github.com/reecerussell/open-social/cmd/users/dao"
+	"github.com/reecerussell/open-social/cmd/users/mock"
 )
 
 func TestNewUser(t *testing.T) {

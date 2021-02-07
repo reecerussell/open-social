@@ -13,9 +13,9 @@ import (
 	hashermock "github.com/reecerussell/adaptive-password-hasher/mock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/users/mock"
-	"github.com/reecerussell/open-social/service/users/mock/repository"
-	"github.com/reecerussell/open-social/service/users/model"
+	"github.com/reecerussell/open-social/cmd/users/mock"
+	"github.com/reecerussell/open-social/cmd/users/mock/repository"
+	"github.com/reecerussell/open-social/cmd/users/model"
 )
 
 func TestCreateUserHandler(t *testing.T) {

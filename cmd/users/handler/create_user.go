@@ -8,9 +8,9 @@ import (
 	hashpkg "github.com/reecerussell/adaptive-password-hasher"
 
 	core "github.com/reecerussell/open-social"
-	"github.com/reecerussell/open-social/service/users/model"
-	"github.com/reecerussell/open-social/service/users/password"
-	"github.com/reecerussell/open-social/service/users/repository"
+	"github.com/reecerussell/open-social/cmd/users/model"
+	"github.com/reecerussell/open-social/cmd/users/password"
+	"github.com/reecerussell/open-social/cmd/users/repository"
 )
 
 // CreateUserHandler is a http.Handler which handles requests to create users.

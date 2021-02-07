@@ -12,10 +12,10 @@ import (
 	hashermock "github.com/reecerussell/adaptive-password-hasher/mock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/reecerussell/open-social/service/users/dao"
-	"github.com/reecerussell/open-social/service/users/mock/repository"
-	"github.com/reecerussell/open-social/service/users/model"
-	repo "github.com/reecerussell/open-social/service/users/repository"
+	"github.com/reecerussell/open-social/cmd/users/dao"
+	"github.com/reecerussell/open-social/cmd/users/mock/repository"
+	"github.com/reecerussell/open-social/cmd/users/model"
+	repo "github.com/reecerussell/open-social/cmd/users/repository"
 )
 
 func getMockUser(referenceID, username string) *model.User {

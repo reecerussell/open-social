@@ -9,8 +9,8 @@ import (
 
 	hashpkg "github.com/reecerussell/adaptive-password-hasher"
 
-	"github.com/reecerussell/open-social/service/users/dao"
-	"github.com/reecerussell/open-social/service/users/password"
+	"github.com/reecerussell/open-social/cmd/users/dao"
+	"github.com/reecerussell/open-social/cmd/users/password"
 )
 
 const (
