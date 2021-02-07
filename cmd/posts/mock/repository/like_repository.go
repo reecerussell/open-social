@@ -46,3 +46,17 @@ func (mr *MockLikeRepositoryMockRecorder) Create(ctx, postID, userReferenceID in
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockLikeRepository)(nil).Create), ctx, postID, userReferenceID)
 }
+
+// Delete mocks base method.
+func (m *MockLikeRepository) Delete(ctx context.Context, postID int, userReferenceID string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, postID, userReferenceID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockLikeRepositoryMockRecorder) Delete(ctx, postID, userReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockLikeRepository)(nil).Delete), ctx, postID, userReferenceID)
+}
