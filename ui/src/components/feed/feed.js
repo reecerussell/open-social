@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { feedApi, postApi } from "../../api";
-import { Image } from "../shared";
+import { Image, FormattedDate } from "../shared";
 
 const Feed = ({ items, error, loading, fetchFeed, likePost, unlikePost }) => {
     useEffect(() => {
@@ -68,7 +68,7 @@ const Feed = ({ items, error, loading, fetchFeed, likePost, unlikePost }) => {
                                 to={"/post/" + item.id}
                                 className="text-muted"
                             >
-                                {item.posted}
+                                <FormattedDate value={item.posted} />
                             </Link>
                         </small>
                     </p>
