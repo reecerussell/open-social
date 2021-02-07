@@ -7,7 +7,7 @@ package repository
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/reecerussell/open-social/service/users/model"
+	model "github.com/reecerussell/open-social/cmd/users/model"
 	reflect "reflect"
 )
 

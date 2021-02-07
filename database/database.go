@@ -14,6 +14,7 @@ type Database interface {
 	Single(ctx context.Context, query string, args ...interface{}) (Row, error)
 	Execute(ctx context.Context, query string, args ...interface{}) (int64, error)
 	ExecuteTx(ctx context.Context, query string, args ...interface{}) (int64, SaveFunc, error)
+	Ping(ctx context.Context) error
 }
 
 // Rows is an interface which is implemented by sql.Rows. This makes testing
@@ -113,4 +114,8 @@ func save(tx *sql.Tx) SaveFunc {
 			tx.Rollback()
 		}
 	}
+}
+
+func (db *database) Ping(ctx context.Context) error {
+	return db.sql.PingContext(ctx)
 }

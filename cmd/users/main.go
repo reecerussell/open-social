@@ -12,6 +12,7 @@ import (
 	"github.com/reecerussell/open-social/cmd/users/handler"
 	"github.com/reecerussell/open-social/cmd/users/password"
 	"github.com/reecerussell/open-social/cmd/users/repository"
+	"github.com/reecerussell/open-social/database"
 	"github.com/reecerussell/open-social/util"
 )
 
@@ -23,16 +24,19 @@ const (
 func main() {
 	cnf := buildConfig()
 	ctn := buildServices(cnf)
+	db := ctn.GetService("Database").(database.Database)
 
 	createUser := ctn.GetService("CreateUserHandler").(*handler.CreateUserHandler)
 	getClaims := ctn.GetService("GetClaimsHandler").(*handler.GetClaimsHandler)
 	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
 
 	app := core.NewApp("0.0.0.0:80")
+	app.AddHealthCheck(database.NewHealthCheck(db))
+	app.AddMiddleware(core.NewLoggingMiddleware())
+
 	app.Post("/users", createUser)
 	app.Get("/users/id/{referenceId}", getIDByReference)
 	app.Post("/claims", getClaims)
-	app.HealthCheck(core.HealthCheckHandler)
 
 	go app.Serve()
 
@@ -66,6 +70,16 @@ func buildServices(cnf *Config) *core.Container {
 
 	ctn.AddSingleton("Config", func(ctn *core.Container) interface{} {
 		return cnf
+	})
+
+	ctn.AddSingleton("Database", func(ctn *core.Container) interface{} {
+		url := os.Getenv(connectionStringVar)
+		db, err := database.New(url)
+		if err != nil {
+			panic(err)
+		}
+
+		return db
 	})
 
 	ctn.AddService("PasswordValidator", func(ctn *core.Container) interface{} {

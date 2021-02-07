@@ -7,8 +7,8 @@ package mock
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
-	dto "github.com/reecerussell/open-social/service/posts/dto"
-	model "github.com/reecerussell/open-social/service/posts/model"
+	dto "github.com/reecerussell/open-social/cmd/posts/dto"
+	model "github.com/reecerussell/open-social/cmd/posts/model"
 	reflect "reflect"
 )
 

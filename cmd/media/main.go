@@ -8,6 +8,7 @@ import (
 	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/cmd/media/handler"
 	"github.com/reecerussell/open-social/cmd/media/repository"
+	"github.com/reecerussell/open-social/database"
 	"github.com/reecerussell/open-social/media"
 	"github.com/reecerussell/open-social/media/gcp"
 )
@@ -19,14 +20,17 @@ const (
 
 func main() {
 	ctn := buildServices()
+	db := ctn.GetService("Database").(database.Database)
 
 	createMedia := ctn.GetService("CreateMediaHandler").(*handler.CreateMediaHandler)
 	getMediaContent := ctn.GetService("GetMediaContentHandler").(*handler.GetMediaContentHandler)
 
 	app := core.NewApp("0.0.0.0:80")
+	app.AddHealthCheck(database.NewHealthCheck(db))
+	app.AddMiddleware(core.NewLoggingMiddleware())
+
 	app.Post("/media", createMedia)
 	app.Get("/media/content/{referenceID}", getMediaContent)
-	app.HealthCheck(core.HealthCheckHandler)
 
 	go app.Serve()
 
@@ -39,6 +43,16 @@ func main() {
 
 func buildServices() *core.Container {
 	ctn := core.NewContainer()
+
+	ctn.AddSingleton("Database", func(ctn *core.Container) interface{} {
+		url := os.Getenv(connectionStringVar)
+		db, err := database.New(url)
+		if err != nil {
+			panic(err)
+		}
+
+		return db
+	})
 
 	ctn.AddService("MediaRepository", func(ctn *core.Container) interface{} {
 		url := os.Getenv(connectionStringVar)

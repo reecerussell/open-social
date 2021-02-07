@@ -7,7 +7,7 @@ package mock
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
-	database "github.com/reecerussell/open-social/core/database"
+	database "github.com/reecerussell/open-social/database"
 	reflect "reflect"
 )
 
@@ -113,6 +113,20 @@ func (mr *MockDatabaseMockRecorder) ExecuteTx(ctx, query interface{}, args ...in
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, query}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecuteTx", reflect.TypeOf((*MockDatabase)(nil).ExecuteTx), varargs...)
+}
+
+// Ping mocks base method.
+func (m *MockDatabase) Ping(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Ping", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Ping indicates an expected call of Ping.
+func (mr *MockDatabaseMockRecorder) Ping(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockDatabase)(nil).Ping), ctx)
 }
 
 // MockRows is a mock of Rows interface.

@@ -21,6 +21,7 @@ const (
 
 func main() {
 	ctn := buildServices()
+	db := ctn.GetService("Database").(database.Database)
 
 	createPost := ctn.GetService("CreatePostHandler").(*handler.CreatePostHandler)
 	feedhandler := ctn.GetService("FeedHandler").(*handler.FeedHandler)
@@ -28,11 +29,13 @@ func main() {
 	getPost := ctn.GetService("GetPostHandler").(*handler.GetPostHandler)
 
 	app := core.NewApp("0.0.0.0:80")
+	app.AddHealthCheck(database.NewHealthCheck(db))
+	app.AddMiddleware(core.NewLoggingMiddleware())
+
 	app.Post("/posts", createPost)
 	app.Get("/posts/{postReferenceID}/{userReferenceID}", getPost)
 	app.Post("/posts/like", likePost)
 	app.Get("/feed/{userReferenceId}", feedhandler)
-	app.HealthCheck(core.HealthCheckHandler)
 
 	go app.Serve()
 
