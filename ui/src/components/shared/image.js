@@ -3,10 +3,11 @@ import LazyLoad from "react-lazyload";
 import PropTypes from "prop-types";
 import environment from "../../environment";
 
-const Image = ({ id, className, onDoubleClick }) => (
+const Image = ({ id, alt, className, onDoubleClick }) => (
     <LazyLoad once>
         <img
             src={environment.mediaUrl + id}
+            alt={alt}
             className={className}
             onDoubleClick={onDoubleClick}
         />
@@ -15,6 +16,7 @@ const Image = ({ id, className, onDoubleClick }) => (
 
 Image.propTypes = {
     id: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
     className: PropTypes.string,
     onDoubleClick: PropTypes.func,
 };
