@@ -32,6 +32,7 @@ const Post = ({ post, loading, error, loadPost, likePost, unlikePost }) => {
                     id={post.mediaId}
                     alt={post.caption}
                     className="img-fluid"
+                    onDoubleClick={handleLikeClick}
                 />
             )}
             <div className="p-4">
