@@ -6,10 +6,10 @@ import (
 	"os/signal"
 
 	core "github.com/reecerussell/open-social"
+	"github.com/reecerussell/open-social/cmd/media/handler"
+	"github.com/reecerussell/open-social/cmd/media/repository"
 	"github.com/reecerussell/open-social/media"
 	"github.com/reecerussell/open-social/media/gcp"
-	"github.com/reecerussell/open-social/service/media/handler"
-	"github.com/reecerussell/open-social/service/media/repository"
 )
 
 const (

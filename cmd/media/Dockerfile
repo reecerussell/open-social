@@ -8,7 +8,7 @@ COPY . .
 
 RUN go mod download
 
-WORKDIR /go/src/github.com/reecerussell/open-social/service/media
+WORKDIR /go/src/github.com/reecerussell/open-social/cmd/media
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app/main main.go
 

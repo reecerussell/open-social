@@ -12,9 +12,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/reecerussell/open-social/cmd/media/mock/repository"
+	"github.com/reecerussell/open-social/cmd/media/model"
 	"github.com/reecerussell/open-social/mock/media"
-	"github.com/reecerussell/open-social/service/media/mock/repository"
-	"github.com/reecerussell/open-social/service/media/model"
 )
 
 func TestCreateMediaHandler(t *testing.T) {

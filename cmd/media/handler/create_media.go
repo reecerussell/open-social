@@ -8,9 +8,9 @@ import (
 	"net/http"
 
 	core "github.com/reecerussell/open-social"
+	"github.com/reecerussell/open-social/cmd/media/model"
+	"github.com/reecerussell/open-social/cmd/media/repository"
 	"github.com/reecerussell/open-social/media"
-	"github.com/reecerussell/open-social/service/media/model"
-	"github.com/reecerussell/open-social/service/media/repository"
 )
 
 // CreateMediaHandler is a http.Handler used to create a new Media record.

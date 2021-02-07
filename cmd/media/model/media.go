@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/reecerussell/open-social/service/media/dao"
+	"github.com/reecerussell/open-social/cmd/media/dao"
 )
 
 var validContentTypes = [...]string{

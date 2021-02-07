@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/mux"
 
 	core "github.com/reecerussell/open-social"
+	"github.com/reecerussell/open-social/cmd/media/repository"
 	"github.com/reecerussell/open-social/media"
-	"github.com/reecerussell/open-social/service/media/repository"
 )
 
 // GetMediaContentHandler is a http.Handler which serves a media's content.
