@@ -1,15 +1,20 @@
 import { feedTypes, postTypes } from "../actions";
 import initialState from "../store/initialState";
 
-const markPostAsLiked = (feedItems, id) => {
+const updateLikedStatus = (feedItems, id, liked) => {
     const newItems = [];
 
     for (let i = 0; i < feedItems.length; i++) {
         const feedItem = feedItems[i];
         console.log(id, feedItem);
         if (feedItem.id === id) {
-            feedItem.hasUserLiked = true;
-            feedItem.likes += 1;
+            if (liked) {
+                feedItem.hasUserLiked = true;
+                feedItem.likes += 1;
+            } else {
+                feedItem.hasUserLiked = false;
+                feedItem.likes -= 1;
+            }
         }
 
         newItems.push(feedItem);
@@ -46,11 +51,29 @@ const feedReducer = (state = initialState.feed, action) => {
         case postTypes.LIKE_POST_SUCCESS:
             return {
                 ...state,
-                items: markPostAsLiked(state.items, action.id),
+                items: updateLikedStatus(state.items, action.id, true),
                 loading: false,
                 error: null,
             };
         case postTypes.LIKE_POST_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
+        case postTypes.UNLIKE_POST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case postTypes.UNLIKE_POST_SUCCESS:
+            return {
+                ...state,
+                items: updateLikedStatus(state.items, action.id, false),
+                loading: false,
+                error: null,
+            };
+        case postTypes.UNLIKE_POST_ERROR:
             return {
                 ...state,
                 error: action.error,

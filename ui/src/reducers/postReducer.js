@@ -39,6 +39,25 @@ const postReducer = (state = initialState.post, action) => {
                 error: action.error,
                 loading: false,
             };
+        case types.UNLIKE_POST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case types.UNLIKE_POST_SUCCESS:
+            return {
+                ...state,
+                hasLiked: false,
+                likes: state.likes - 1,
+                loading: false,
+                error: null,
+            };
+        case types.UNLIKE_POST_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
         case types.LOAD_POST:
             return {
                 ...state,

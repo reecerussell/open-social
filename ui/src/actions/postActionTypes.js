@@ -6,6 +6,10 @@ export const LIKE_POST = "LIKE_POST";
 export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
 export const LIKE_POST_ERROR = "LIKE_POST_ERROR";
 
+export const UNLIKE_POST = "UNLIKE_POST";
+export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
+export const UNLIKE_POST_ERROR = "UNLIKE_POST_ERROR";
+
 export const LOAD_POST = "LOAD_POST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_ERROR = "LOAD_POST_ERROR";

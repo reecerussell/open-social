@@ -28,6 +28,21 @@ export const likePostError = error => ({
     error: error,
 });
 
+export const unlikePost = id => ({
+    type: types.UNLIKE_POST,
+    id: id,
+});
+
+export const unlikePostSuccess = id => ({
+    type: types.UNLIKE_POST_SUCCESS,
+    id: id,
+});
+
+export const unlikePostError = error => ({
+    type: types.UNLIKE_POST_ERROR,
+    error: error,
+});
+
 export const loadPost = () => ({
     type: types.LOAD_POST,
 });

@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { feedApi, postApi } from "../../api";
 import { Image } from "../shared";
 
-const Feed = ({ items, error, loading, fetchFeed, likePost }) => {
+const Feed = ({ items, error, loading, fetchFeed, likePost, unlikePost }) => {
     useEffect(() => {
         fetchFeed();
     }, [fetchFeed]);
@@ -14,7 +14,9 @@ const Feed = ({ items, error, loading, fetchFeed, likePost }) => {
     const handleLikePost = post => e => {
         e.preventDefault();
 
-        if (!post.hasUserLiked) {
+        if (post.hasUserLiked) {
+            unlikePost(post.id);
+        } else {
             likePost(post.id);
         }
     };
@@ -91,6 +93,7 @@ Feed.propTypes = {
     loading: PropTypes.bool.isRequired,
     fetchFeed: PropTypes.func.isRequired,
     likePost: PropTypes.func.isRequired,
+    unlikePost: PropTypes.func.isRequired,
 };
 
 Feed.defaultProps = {
@@ -109,6 +112,7 @@ const mapDispatchToProps = dispatch =>
         {
             fetchFeed: feedApi.fetchFeed,
             likePost: postApi.likePost,
+            unlikePost: postApi.unlikePost,
         },
         dispatch
     );
