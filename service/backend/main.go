@@ -9,12 +9,10 @@ import (
 	"github.com/reecerussell/gojwt/rsa"
 
 	"github.com/reecerussell/open-social/client/auth"
-	mediaSdk "github.com/reecerussell/open-social/client/media"
+	"github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
 	"github.com/reecerussell/open-social/client/users"
 	"github.com/reecerussell/open-social/core"
-	"github.com/reecerussell/open-social/core/media"
-	"github.com/reecerussell/open-social/core/media/gcp"
 	"github.com/reecerussell/open-social/service/backend/handler"
 	"github.com/reecerussell/open-social/service/backend/middleware"
 )
@@ -42,7 +40,9 @@ func main() {
 	app.AddMiddleware(authMiddleware)
 
 	app.PostFunc("/users/register", userHandler.Register)
+	app.PostFunc("/posts/like/{id}", postHandler.Like)
 	app.PostFunc("/posts", postHandler.Create)
+	app.GetFunc("/posts/{id}", postHandler.GetPost)
 	app.GetFunc("/feed", postHandler.GetFeed)
 
 	go app.Serve()
@@ -77,7 +77,7 @@ func buildServices() *core.Container {
 
 	ctn.AddService("MediaClient", func(ctn *core.Container) interface{} {
 		url := os.Getenv(mediaAPIVar)
-		client := mediaSdk.New(url)
+		client := media.New(url)
 		return client
 	})
 
@@ -92,12 +92,6 @@ func buildServices() *core.Container {
 		return h
 	})
 
-	ctn.AddService("MediaService", func(ctn *core.Container) interface{} {
-		svc := gcp.New(os.Getenv(bucketName))
-
-		return svc
-	})
-
 	ctn.AddService("UserHandler", func(ctn *core.Container) interface{} {
 		client := ctn.GetService("UserClient").(users.Client)
 		authClient := ctn.GetService("AuthClient").(auth.Client)
@@ -107,9 +101,8 @@ func buildServices() *core.Container {
 
 	ctn.AddService("PostHandler", func(ctn *core.Container) interface{} {
 		client := ctn.GetService("PostClient").(posts.Client)
-		mediaSvc := ctn.GetService("MediaService").(media.Service)
-		mediaClient := ctn.GetService("MediaClient").(mediaSdk.Client)
-		h := handler.NewPostHandler(client, mediaSvc, mediaClient)
+		mediaClient := ctn.GetService("MediaClient").(media.Client)
+		h := handler.NewPostHandler(client, mediaClient)
 		return h
 	})
 

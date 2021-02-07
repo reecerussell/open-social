@@ -1,3 +1,7 @@
 export const CREATE_POST = "CREATE_POST";
 export const CREATE_POST_SUCCESS = "CREATE_POST_SUCCESS";
 export const CREATE_POST_ERROR = "CREATE_POST_ERROR";
+
+export const LIKE_POST = "LIKE_POST";
+export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
+export const LIKE_POST_ERROR = "LIKE_POST_ERROR";

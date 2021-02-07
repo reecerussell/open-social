@@ -12,4 +12,7 @@ type Post struct {
 	UserID      int
 	Posted      time.Time
 	Caption     string
+
+	LikeCount    int
+	HasUserLiked bool
 }

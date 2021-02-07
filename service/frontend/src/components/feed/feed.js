@@ -2,20 +2,30 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as api from "../../api/feed";
+import { feedApi, postApi } from "../../api";
 import { Image } from "../shared";
 
-const Feed = ({ items, error, loading, fetchFeed }) => {
+const Feed = ({ items, error, loading, fetchFeed, likePost }) => {
     useEffect(() => {
         fetchFeed();
     }, [fetchFeed]);
 
+    const handleLikePost = post => e => {
+        e.preventDefault();
+
+        if (!post.hasUserLiked) {
+            likePost(post.id);
+        }
+    };
+
     return items.map((item, key) => (
         <div className="section mb-4" key={key}>
             {item.mediaId && (
-                <a href="/">
-                    <Image id={item.mediaId} className="img-fluid" />
-                </a>
+                <Image
+                    id={item.mediaId}
+                    className="img-fluid"
+                    onDoubleClick={handleLikePost(item)}
+                />
             )}
 
             <div className="p-4">
@@ -24,7 +34,7 @@ const Feed = ({ items, error, loading, fetchFeed }) => {
                         <a href="/" className="text-secondary">
                             <b>
                                 {item.likes === 1
-                                    ? item.likes + "Like"
+                                    ? item.likes + " Like"
                                     : item.likes + " Likes"}
                             </b>
                         </a>{" "}
@@ -56,17 +66,18 @@ const Feed = ({ items, error, loading, fetchFeed }) => {
 Feed.propTypes = {
     items: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
+            id: PropTypes.string.isRequired,
             caption: PropTypes.string.isRequired,
             posted: PropTypes.string.isRequired,
             username: PropTypes.string.isRequired,
-            likes: PropTypes.bool.isRequired,
+            likes: PropTypes.number.isRequired,
             hasUserLiked: PropTypes.bool.isRequired,
         }).isRequired
     ),
     error: PropTypes.string,
     loading: PropTypes.bool.isRequired,
     fetchFeed: PropTypes.func.isRequired,
+    likePost: PropTypes.func.isRequired,
 };
 
 Feed.defaultProps = {
@@ -83,7 +94,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
-            fetchFeed: api.fetchFeed,
+            fetchFeed: feedApi.fetchFeed,
+            likePost: postApi.likePost,
         },
         dispatch
     );

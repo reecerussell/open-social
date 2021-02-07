@@ -6,27 +6,26 @@ import (
 	"log"
 	"net/http"
 
-	mediaSdk "github.com/reecerussell/open-social/client/media"
+	"github.com/gorilla/mux"
+
+	"github.com/reecerussell/open-social/client"
+	"github.com/reecerussell/open-social/client/media"
 	"github.com/reecerussell/open-social/client/posts"
-	"github.com/reecerussell/open-social/client/users"
 	"github.com/reecerussell/open-social/core"
-	"github.com/reecerussell/open-social/core/media"
 )
 
 // PostHandler handles requests to the post domain.
 type PostHandler struct {
 	core.Handler
-	client   posts.Client
-	uploader media.Service
-	media    mediaSdk.Client
+	client posts.Client
+	media  media.Client
 }
 
 // NewPostHandler returns a new instance of PostHandler.
-func NewPostHandler(client posts.Client, uploader media.Service, media mediaSdk.Client) *PostHandler {
+func NewPostHandler(client posts.Client, media media.Client) *PostHandler {
 	return &PostHandler{
-		client:   client,
-		uploader: uploader,
-		media:    media,
+		client: client,
+		media:  media,
 	}
 }
 
@@ -85,7 +84,7 @@ func (h *PostHandler) uploadMedia(ctx context.Context, w http.ResponseWriter, r 
 	file.Read(fileData)
 	contentType := http.DetectContentType(fileData)
 
-	m, err := h.media.Create(&mediaSdk.CreateRequest{
+	m, err := h.media.Create(&media.CreateRequest{
 		ContentType: contentType,
 		Content:     base64.StdEncoding.EncodeToString(fileData),
 	})
@@ -104,22 +103,50 @@ func (h *PostHandler) GetFeed(w http.ResponseWriter, r *http.Request) {
 
 	feed, err := h.client.GetFeed(userID)
 	if err != nil {
-		switch e := err.(type) {
-		case *users.Error:
-			h.RespondError(w, e, e.StatusCode)
-			return
-		default:
-			h.RespondError(w, err, http.StatusInternalServerError)
-			return
-		}
+		h.handleError(w, err)
+		return
 	}
 
 	h.Respond(w, feed)
 }
 
+// GetPost returns a post.
+func (h *PostHandler) GetPost(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	post, err := h.client.Get(id, userID)
+	if err != nil {
+		h.handleError(w, err)
+		return
+	}
+
+	h.Respond(w, post)
+}
+
+// Like marks a post as liked by the current user.
+func (h *PostHandler) Like(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	err := h.client.LikePost(id, userID)
+	if err != nil {
+		h.handleError(w, err)
+		return
+	}
+
+	h.Respond(w, nil)
+}
+
 func (h *PostHandler) handleError(w http.ResponseWriter, err error) {
 	switch e := err.(type) {
-	case *users.Error:
+	case *client.Error:
 		h.RespondError(w, e, e.StatusCode)
 		return
 	default:

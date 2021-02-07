@@ -34,7 +34,12 @@ const send = async (url, options) => {
 
         switch (res.status) {
             case 200:
-                const data = await res.json();
+                let data = null;
+
+                if (res.headers.get("Content-Type") === "application/json") {
+                    data = await res.json();
+                }
+
                 return {
                     ok: true,
                     data: data,

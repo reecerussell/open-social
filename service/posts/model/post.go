@@ -21,6 +21,9 @@ type Post struct {
 	mediaID     *int
 	posted      time.Time
 	caption     string
+
+	likeCount    int
+	hasUserLiked bool
 }
 
 // NewPost returns a new instance of the Post domain model,
@@ -39,6 +42,11 @@ func NewPost(userID int, mediaID *int, caption string) (*Post, error) {
 	}
 
 	return p, nil
+}
+
+// ID returns the post's id.
+func (p *Post) ID() int {
+	return p.id
 }
 
 // ReferenceID returns the post's reference id.
@@ -75,12 +83,14 @@ func (p *Post) SetReferenceID(referenceID string) {
 // Dao returns a data access object populated with the post's data.
 func (p *Post) Dao() *dao.Post {
 	return &dao.Post{
-		ID:          p.id,
-		ReferenceID: p.referenceID,
-		MediaID:     p.mediaID,
-		UserID:      p.userID,
-		Posted:      p.posted,
-		Caption:     p.caption,
+		ID:           p.id,
+		ReferenceID:  p.referenceID,
+		MediaID:      p.mediaID,
+		UserID:       p.userID,
+		Posted:       p.posted,
+		Caption:      p.caption,
+		LikeCount:    p.likeCount,
+		HasUserLiked: p.hasUserLiked,
 	}
 }
 
@@ -89,11 +99,23 @@ func (p *Post) Dao() *dao.Post {
 // by the PostRepository, to instantiate new domain models.
 func PostFromDao(d *dao.Post) *Post {
 	return &Post{
-		id:          d.ID,
-		referenceID: d.ReferenceID,
-		mediaID:     d.MediaID,
-		userID:      d.UserID,
-		posted:      d.Posted,
-		caption:     d.Caption,
+		id:           d.ID,
+		referenceID:  d.ReferenceID,
+		mediaID:      d.MediaID,
+		userID:       d.UserID,
+		posted:       d.Posted,
+		caption:      d.Caption,
+		likeCount:    d.LikeCount,
+		hasUserLiked: d.HasUserLiked,
 	}
+}
+
+// CanLike determines if a user can like this post or not. An error is returned,
+// if the user cannot like it.
+func (p *Post) CanLike() error {
+	if p.hasUserLiked {
+		return errors.New("user has already liked this post")
+	}
+
+	return nil
 }

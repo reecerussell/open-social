@@ -3,7 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
+	"github.com/reecerussell/open-social/service/posts/dao"
 	"github.com/reecerussell/open-social/service/posts/dto"
 	"github.com/reecerussell/open-social/service/posts/model"
 
@@ -11,10 +13,16 @@ import (
 	_ "github.com/denisenkom/go-mssqldb"
 )
 
+// Post data errors
+var (
+	ErrPostNotFound = errors.New("post not found")
+)
+
 // PostRepository is a high level interface used to manipulate post data.
 type PostRepository interface {
 	Create(ctx context.Context, p *model.Post) error
 	GetFeed(ctx context.Context, userReferenceID string) ([]*dto.FeedItem, error)
+	Get(ctx context.Context, referenceID, userReferenceID string) (*model.Post, error)
 }
 
 type postRepository struct {
@@ -144,4 +152,64 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 	}
 
 	return feed, nil
+}
+
+func (r *postRepository) Get(ctx context.Context, referenceID, userReferenceID string) (*model.Post, error) {
+	db, err := sql.Open("sqlserver", r.url)
+	if err != nil {
+		return nil, err
+	}
+
+	const query = `;WITH [Likes] AS (
+			SELECT [U].[ReferenceId] FROM [PostLikes] AS [L]
+				INNER JOIN [Posts] AS [P] ON [P].[Id] = [L].[PostId]
+				INNER JOIN [Users] AS [U] ON [U].[Id] = [L].[UserId]
+			WHERE [P].[ReferenceId] = @postReferenceId
+		)
+		
+		SELECT
+			[Id],
+			[ReferenceId],
+			[MediaId],
+			[UserId],
+			[Posted],
+			[Caption],
+			(SELECT COUNT([ReferenceId]) FROM [Likes]) AS [LikeCount],
+			CASE (SELECT COUNT([ReferenceId]) 
+					FROM [Likes] WHERE [ReferenceId] = @userReferenceId) 
+				WHEN 1 THEN CAST(1 AS BIT) 
+				ELSE CAST(0 AS BIT) 
+			END AS [HasUserLiked]
+		FROM [Posts]
+		WHERE [ReferenceId] = @postReferenceId;`
+
+	stmt, err := db.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var post dao.Post
+	err = stmt.QueryRowContext(ctx,
+		sql.Named("postReferenceId", referenceID),
+		sql.Named("userReferenceId", userReferenceID)).
+		Scan(
+			&post.ID,
+			&post.ReferenceID,
+			&post.MediaID,
+			&post.UserID,
+			&post.Posted,
+			&post.Caption,
+			&post.LikeCount,
+			&post.HasUserLiked,
+		)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrPostNotFound
+		}
+
+		return nil, err
+	}
+
+	return model.PostFromDao(&post), nil
 }

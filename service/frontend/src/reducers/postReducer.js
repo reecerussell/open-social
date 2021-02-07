@@ -20,6 +20,23 @@ const postReducer = (state = initialState.post, action) => {
                 error: action.error,
                 loading: false,
             };
+        case types.LIKE_POST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case types.LIKE_POST_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            };
+        case types.LIKE_POST_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
         default:
             return state;
     }

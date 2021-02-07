@@ -4,6 +4,12 @@ networks:
     open-social:
         driver: bridge
 
+# volumes:
+#     zookeeper_data:
+#         driver: local
+#     kafka_data:
+#         driver: local
+
 services:
     ingress:
         image: nginx
@@ -71,10 +77,12 @@ services:
         environment:
             CONNECTION_STRING: ${CONNECTION_STRING}
             USERS_API_URL: http://users:80
+            KAFKA_HOSY: kafka:9093
         networks:
             - open-social
         depends_on:
             - users
+            #- kafka
 
     media:
         image: reecerussell/open-social-media
@@ -101,3 +109,32 @@ services:
             - open-social
         depends_on:
             - media
+
+    ## KAFKA
+
+    # zookeeper:
+    #     image: bitnami/zookeeper
+    #     environment:
+    #         ALLOW_ANONYMOUS_LOGIN: "yes"
+    #     volumes:
+    #         - "zookeeper_data:/bitnami"
+    #     networks:
+    #         - open-social
+
+    # kafka:
+    #     image: bitnami/kafka
+    #     environment:
+    #         KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+    #         ALLOW_PLAINTEXT_LISTENER: "yes"
+    #         KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+    #         KAFKA_CFG_INTER_SECURITY_PROTOCOL_MAP: "INTERNAL://kafka:9094"
+    #         KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT"
+    #         KAFKA_CFG_LISTENERS: "CLIENT://:9092,EXTERNAL://:9093,INTERNAL://:9094"
+    #         KAFKA_CFG_ADVERTISED_LISTENERS: "CLIENT://kafka:9092,EXTERNAL://localhost:9093,INTERNAL://kafka:9094"
+    #         KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+    #     volumes:
+    #         - "kafka_data:/bitnami"
+    #     networks:
+    #         - open-social
+    #     depends_on:
+    #         - zookeeper

@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/reecerussell/open-social/service/posts/dto"
-	"github.com/reecerussell/open-social/service/posts/mock/repository"
+	repository "github.com/reecerussell/open-social/service/posts/mock/repository"
 )
 
 func TestFeedHandler(t *testing.T) {

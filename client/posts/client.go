@@ -3,6 +3,7 @@ package posts
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -13,6 +14,8 @@ import (
 type Client interface {
 	Create(in *CreateRequest) (*CreateResponse, error)
 	GetFeed(userReferenceID string) ([]*FeedItem, error)
+	LikePost(postReferenceID, userReferenceID string) error
+	Get(postReferenceID, userReferenceID string) (*Post, error)
 }
 
 type client struct {
@@ -20,6 +23,7 @@ type client struct {
 	http *http.Client
 }
 
+// New returns a new instance of the post client.
 func New(url string) Client {
 	return &client{
 		url: url,
@@ -88,4 +92,63 @@ func (c *client) GetFeed(userReferenceID string) ([]*FeedItem, error) {
 	}
 
 	return nil, clientpkg.NewError(resp.StatusCode, data.Message)
+}
+
+func (c *client) LikePost(postReferenceID, userReferenceID string) error {
+	payload := map[string]string{
+		"postReferenceId": postReferenceID,
+		"userReferenceId": userReferenceID,
+	}
+	jsonBytes, _ := json.Marshal(payload)
+	body := bytes.NewReader(jsonBytes)
+
+	url := c.url + "/posts/like"
+	req, _ := http.NewRequest(http.MethodPost, url, body)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var data clientpkg.ErrorResponse
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return err
+		}
+
+		return clientpkg.NewError(resp.StatusCode, data.Message)
+	}
+
+	return nil
+}
+
+func (c *client) Get(postReferenceID, userReferenceID string) (*Post, error) {
+	url := fmt.Sprintf("%s/posts/%s/%s", c.url, postReferenceID, userReferenceID)
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		var data clientpkg.ErrorResponse
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, clientpkg.NewError(resp.StatusCode, data.Message)
+	}
+
+	var data Post
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
 }
