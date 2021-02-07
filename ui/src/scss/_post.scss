@@ -1,0 +1,8 @@
+.like-link-btn {
+    @extend .text-primary;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

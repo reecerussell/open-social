@@ -6,12 +6,24 @@ import { bindActionCreators } from "redux";
 import { Image, FormattedDate } from "../shared";
 import { postApi } from "../../api";
 
-const Post = ({ post, loading, error, loadPost, likePost }) => {
+const Post = ({ post, loading, error, loadPost, likePost, unlikePost }) => {
     const { id } = useParams();
 
     useEffect(() => {
         loadPost(id);
     }, [loadPost, id]);
+
+    const handleLikeClick = () => {
+        if (loading) {
+            return;
+        }
+
+        if (post.hasLiked) {
+            unlikePost(post.id);
+        } else {
+            likePost(post.id);
+        }
+    };
 
     return (
         <div className="section" id="post">
@@ -47,9 +59,12 @@ const Post = ({ post, loading, error, loadPost, likePost }) => {
                         <br />
                         <small>
                             <FormattedDate value={post.posted} />{" "}
-                            <a href="javascript:void(0)">
+                            <span
+                                className="like-link-btn"
+                                onClick={handleLikeClick}
+                            >
                                 {post.hasLiked ? "Unlike" : "Like"}
-                            </a>
+                            </span>
                         </small>
                     </p>
                 </div>
@@ -67,6 +82,7 @@ Post.propTypes = {
         caption: PropTypes.string.isRequired,
         likes: PropTypes.number.isRequired,
         hasLiked: PropTypes.bool.isRequired,
+        unlikePost: PropTypes.bool.isRequired,
     }).isRequired,
     error: PropTypes.string,
     loading: PropTypes.bool,
@@ -90,6 +106,7 @@ const mapDispatchToProps = dispatch =>
         {
             loadPost: postApi.loadPost,
             likePost: postApi.likePost,
+            unlikePost: postApi.unlikePost,
         },
         dispatch
     );
