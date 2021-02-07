@@ -15,6 +15,7 @@ type Client interface {
 	Create(in *CreateRequest) (*CreateResponse, error)
 	GetFeed(userReferenceID string) ([]*FeedItem, error)
 	LikePost(postReferenceID, userReferenceID string) error
+	UnlikePost(postReferenceID, userReferenceID string) error
 	Get(postReferenceID, userReferenceID string) (*Post, error)
 }
 
@@ -103,6 +104,36 @@ func (c *client) LikePost(postReferenceID, userReferenceID string) error {
 	body := bytes.NewReader(jsonBytes)
 
 	url := c.url + "/posts/like"
+	req, _ := http.NewRequest(http.MethodPost, url, body)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var data clientpkg.ErrorResponse
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return err
+		}
+
+		return clientpkg.NewError(resp.StatusCode, data.Message)
+	}
+
+	return nil
+}
+
+func (c *client) UnlikePost(postReferenceID, userReferenceID string) error {
+	payload := map[string]string{
+		"postReferenceId": postReferenceID,
+		"userReferenceId": userReferenceID,
+	}
+	jsonBytes, _ := json.Marshal(payload)
+	body := bytes.NewReader(jsonBytes)
+
+	url := c.url + "/posts/unlike"
 	req, _ := http.NewRequest(http.MethodPost, url, body)
 
 	resp, err := c.http.Do(req)

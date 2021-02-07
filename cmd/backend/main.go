@@ -40,6 +40,7 @@ func main() {
 
 	app.PostFunc("/users/register", userHandler.Register)
 	app.PostFunc("/posts/like/{id}", postHandler.Like)
+	app.PostFunc("/posts/unlike/{id}", postHandler.Unlike)
 	app.PostFunc("/posts", postHandler.Create)
 	app.GetFunc("/posts/{id}", postHandler.GetPost)
 	app.GetFunc("/feed", postHandler.GetFeed)

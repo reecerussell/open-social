@@ -26,6 +26,7 @@ func main() {
 	createPost := ctn.GetService("CreatePostHandler").(*handler.CreatePostHandler)
 	feedhandler := ctn.GetService("FeedHandler").(*handler.FeedHandler)
 	likePost := ctn.GetService("LikePostHandler").(*handler.LikePostHandler)
+	unlikePost := ctn.GetService("UnlikePostHandler").(*handler.UnlikePostHandler)
 	getPost := ctn.GetService("GetPostHandler").(*handler.GetPostHandler)
 
 	app := core.NewApp("0.0.0.0:80")
@@ -35,6 +36,7 @@ func main() {
 	app.Post("/posts", createPost)
 	app.Get("/posts/{postReferenceID}/{userReferenceID}", getPost)
 	app.Post("/posts/like", likePost)
+	app.Post("/posts/unlike", unlikePost)
 	app.Get("/feed/{userReferenceId}", feedhandler)
 
 	go app.Serve()
@@ -97,6 +99,13 @@ func buildServices() *core.Container {
 		likes := ctn.GetService("LikeRepository").(repository.LikeRepository)
 
 		return handler.NewLikePostHandler(repo, likes)
+	})
+
+	ctn.AddService("UnlikePostHandler", func(ctn *core.Container) interface{} {
+		repo := ctn.GetService("PostRepository").(repository.PostRepository)
+		likes := ctn.GetService("LikeRepository").(repository.LikeRepository)
+
+		return handler.NewUnlikePostHandler(repo, likes)
 	})
 
 	ctn.AddService("GetPostHandler", func(ctn *core.Container) interface{} {

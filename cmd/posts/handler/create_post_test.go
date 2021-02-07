@@ -14,7 +14,7 @@ import (
 
 	clientMock "github.com/reecerussell/open-social/client/mock/users"
 	repoMock "github.com/reecerussell/open-social/cmd/posts/mock/repository"
-	"github.com/reecerussell/open-social/service/posts/model"
+	"github.com/reecerussell/open-social/cmd/posts/model"
 )
 
 func TestCreatePostHandler(t *testing.T) {

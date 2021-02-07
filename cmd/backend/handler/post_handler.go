@@ -144,6 +144,23 @@ func (h *PostHandler) Like(w http.ResponseWriter, r *http.Request) {
 	h.Respond(w, nil)
 }
 
+// Unlike marks a post as unliked by the current user.
+func (h *PostHandler) Unlike(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	err := h.client.UnlikePost(id, userID)
+	if err != nil {
+		h.handleError(w, err)
+		return
+	}
+
+	h.Respond(w, nil)
+}
+
 func (h *PostHandler) handleError(w http.ResponseWriter, err error) {
 	switch e := err.(type) {
 	case *client.Error:

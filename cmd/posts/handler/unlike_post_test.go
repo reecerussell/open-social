@@ -18,7 +18,7 @@ import (
 	"github.com/reecerussell/open-social/cmd/posts/repository"
 )
 
-func TestLikePostHandler(t *testing.T) {
+func TestUnlikePostHandler(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -27,16 +27,16 @@ func TestLikePostHandler(t *testing.T) {
 	testUserReferenceID := "1740398"
 	testPost := model.PostFromDao(&dao.Post{
 		ID:           testPostID,
-		HasUserLiked: false,
+		HasUserLiked: true,
 	})
 
 	mockRepo := mock.NewMockPostRepository(ctrl)
 	mockRepo.EXPECT().Get(gomock.Any(), testPostReferenceID, testUserReferenceID).Return(testPost, nil)
 
 	mockLikes := mock.NewMockLikeRepository(ctrl)
-	mockLikes.EXPECT().Create(gomock.Any(), testPostID, testUserReferenceID).Return(nil)
+	mockLikes.EXPECT().Delete(gomock.Any(), testPostID, testUserReferenceID).Return(nil)
 
-	handler := NewLikePostHandler(mockRepo, mockLikes)
+	handler := NewUnlikePostHandler(mockRepo, mockLikes)
 	rr := httptest.NewRecorder()
 
 	body := fmt.Sprintf("{\"postReferenceId\":\"%s\",\"userReferenceId\":\"%s\"}", testPostReferenceID, testUserReferenceID)
@@ -46,7 +46,7 @@ func TestLikePostHandler(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Code)
 }
 
-func TestLikePostHandler_GivenNonExistantPost_ReturnsNotFound(t *testing.T) {
+func TestUnlikePostHandler_GivenNonExistantPost_ReturnsNotFound(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -56,7 +56,7 @@ func TestLikePostHandler_GivenNonExistantPost_ReturnsNotFound(t *testing.T) {
 	mockRepo := mock.NewMockPostRepository(ctrl)
 	mockRepo.EXPECT().Get(gomock.Any(), testPostReferenceID, testUserReferenceID).Return(nil, repository.ErrPostNotFound)
 
-	handler := NewLikePostHandler(mockRepo, nil)
+	handler := NewUnlikePostHandler(mockRepo, nil)
 	rr := httptest.NewRecorder()
 
 	body := fmt.Sprintf("{\"postReferenceId\":\"%s\",\"userReferenceId\":\"%s\"}", testPostReferenceID, testUserReferenceID)
@@ -75,20 +75,20 @@ func TestLikePostHandler_GivenNonExistantPost_ReturnsNotFound(t *testing.T) {
 	assert.Equal(t, repository.ErrPostNotFound.Error(), data["message"])
 }
 
-func TestLikePostHandler_WhereUserHasAlreadyLikedPost_ReturnsBadRequest(t *testing.T) {
+func TestLikePostHandler_WhereUserHasNotLikedPost_ReturnsBadRequest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	testPostReferenceID := "5234934"
 	testUserReferenceID := "1740398"
 	testPost := model.PostFromDao(&dao.Post{
-		HasUserLiked: true,
+		HasUserLiked: false,
 	})
 
 	mockRepo := mock.NewMockPostRepository(ctrl)
 	mockRepo.EXPECT().Get(gomock.Any(), testPostReferenceID, testUserReferenceID).Return(testPost, nil)
 
-	handler := NewLikePostHandler(mockRepo, nil)
+	handler := NewUnlikePostHandler(mockRepo, nil)
 	rr := httptest.NewRecorder()
 
 	body := fmt.Sprintf("{\"postReferenceId\":\"%s\",\"userReferenceId\":\"%s\"}", testPostReferenceID, testUserReferenceID)
@@ -99,7 +99,7 @@ func TestLikePostHandler_WhereUserHasAlreadyLikedPost_ReturnsBadRequest(t *testi
 	assert.Equal(t, "application/json", rr.HeaderMap.Get("Content-Type"))
 }
 
-func TestLikePostHandler_CreateLikeFails_ReturnsInternalServerError(t *testing.T) {
+func TestLikePostHandler_DeleteLikeFails_ReturnsInternalServerError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -109,16 +109,16 @@ func TestLikePostHandler_CreateLikeFails_ReturnsInternalServerError(t *testing.T
 	testError := errors.New("an error occured")
 	testPost := model.PostFromDao(&dao.Post{
 		ID:           testPostID,
-		HasUserLiked: false,
+		HasUserLiked: true,
 	})
 
 	mockRepo := mock.NewMockPostRepository(ctrl)
 	mockRepo.EXPECT().Get(gomock.Any(), testPostReferenceID, testUserReferenceID).Return(testPost, nil)
 
 	mockLikes := mock.NewMockLikeRepository(ctrl)
-	mockLikes.EXPECT().Create(gomock.Any(), testPostID, testUserReferenceID).Return(testError)
+	mockLikes.EXPECT().Delete(gomock.Any(), testPostID, testUserReferenceID).Return(testError)
 
-	handler := NewLikePostHandler(mockRepo, mockLikes)
+	handler := NewUnlikePostHandler(mockRepo, mockLikes)
 	rr := httptest.NewRecorder()
 
 	body := fmt.Sprintf("{\"postReferenceId\":\"%s\",\"userReferenceId\":\"%s\"}", testPostReferenceID, testUserReferenceID)

@@ -119,3 +119,13 @@ func (p *Post) CanLike() error {
 
 	return nil
 }
+
+// CanUnlike determines if a user can unlike this post or not. An error is returned,
+// if the user cannot unlike it.
+func (p *Post) CanUnlike() error {
+	if !p.hasUserLiked {
+		return errors.New("user has not liked this post")
+	}
+
+	return nil
+}

@@ -158,3 +158,23 @@ func TestPost_CanLike_ReturnsError(t *testing.T) {
 		assert.Equal(t, "user has already liked this post", err.Error())
 	})
 }
+
+func TestPost_CanUnike(t *testing.T) {
+	post := &Post{
+		hasUserLiked: true,
+	}
+
+	err := post.CanUnlike()
+	assert.NoError(t, err)
+}
+
+func TestPost_CanUnlike_ReturnsError(t *testing.T) {
+	t.Run("User Not Liked", func(t *testing.T) {
+		post := &Post{
+			hasUserLiked: false,
+		}
+
+		err := post.CanUnlike()
+		assert.Equal(t, "user has not liked this post", err.Error())
+	})
+}
