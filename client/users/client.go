@@ -3,6 +3,7 @@ package users
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -12,6 +13,7 @@ type Client interface {
 	Create(in *CreateUserRequest) (*CreateUserResponse, error)
 	GetClaims(in *GetClaimsRequest) (*GetClaimsResponse, error)
 	GetIDByReference(referenceID string) (*int, error)
+	GetProfile(username, userReferenceID string) (*Profile, error)
 }
 
 // New returns a new instance of Client.
@@ -120,4 +122,33 @@ func (c *client) GetIDByReference(referenceID string) (*int, error) {
 	}
 
 	return nil, NewError(resp.StatusCode, data.Message)
+}
+
+func (c *client) GetProfile(username, userReferenceID string) (*Profile, error) {
+	url := fmt.Sprintf("%s/profile/%s/%s", c.url, username, userReferenceID)
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var data ErrorResponse
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, NewError(resp.StatusCode, data.Message)
+	}
+
+	var data Profile
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
 }

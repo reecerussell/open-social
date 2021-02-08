@@ -11,6 +11,7 @@ import (
 	core "github.com/reecerussell/open-social"
 	"github.com/reecerussell/open-social/cmd/users/handler"
 	"github.com/reecerussell/open-social/cmd/users/password"
+	"github.com/reecerussell/open-social/cmd/users/provider"
 	"github.com/reecerussell/open-social/cmd/users/repository"
 	"github.com/reecerussell/open-social/database"
 	"github.com/reecerussell/open-social/util"
@@ -29,6 +30,7 @@ func main() {
 	createUser := ctn.GetService("CreateUserHandler").(*handler.CreateUserHandler)
 	getClaims := ctn.GetService("GetClaimsHandler").(*handler.GetClaimsHandler)
 	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
+	getProfile := ctn.GetService("UserProvider").(*handler.GetProfileHandler)
 
 	app := core.NewApp("0.0.0.0:80")
 	app.AddHealthCheck(database.NewHealthCheck(db))
@@ -37,6 +39,7 @@ func main() {
 	app.Post("/users", createUser)
 	app.Get("/users/id/{referenceId}", getIDByReference)
 	app.Post("/claims", getClaims)
+	app.Get("/profile/{username}/{userReferenceID}", getProfile)
 
 	go app.Serve()
 
@@ -107,6 +110,11 @@ func buildServices(cnf *Config) *core.Container {
 		return repository.NewUserRepository(url)
 	})
 
+	ctn.AddService("UserProvider", func(ctn *core.Container) interface{} {
+		db := ctn.GetService("Database").(database.Database)
+		return provider.NewUserProvider(db)
+	})
+
 	ctn.AddService("CreateUserHandler", func(ctn *core.Container) interface{} {
 		val := ctn.GetService("PasswordValidator").(password.Validator)
 		hasher := ctn.GetService("PasswordHasher").(hashpkg.Hasher)
@@ -126,6 +134,12 @@ func buildServices(cnf *Config) *core.Container {
 		repo := ctn.GetService("UserRepository").(repository.UserRepository)
 
 		return handler.NewGetIDByReferenceHandler(repo)
+	})
+
+	ctn.AddService("GetProfileHandler", func(ctn *core.Container) interface{} {
+		provider := ctn.GetService("UserProvider").(provider.UserProvider)
+
+		return handler.NewGetProfileHandler(provider)
 	})
 
 	return ctn
