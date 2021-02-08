@@ -14,6 +14,7 @@ import (
 type Client interface {
 	Create(in *CreateRequest) (*CreateResponse, error)
 	GetFeed(userReferenceID string) ([]*FeedItem, error)
+	GetProfileFeed(username, userReferenceID string) ([]*FeedItem, error)
 	LikePost(postReferenceID, userReferenceID string) error
 	UnlikePost(postReferenceID, userReferenceID string) error
 	Get(postReferenceID, userReferenceID string) (*Post, error)
@@ -93,6 +94,35 @@ func (c *client) GetFeed(userReferenceID string) ([]*FeedItem, error) {
 	}
 
 	return nil, clientpkg.NewError(resp.StatusCode, data.Message)
+}
+
+func (c *client) GetProfileFeed(username, userReferenceID string) ([]*FeedItem, error) {
+	url := fmt.Sprintf("%s/profile/feed/%s/%s", c.url, username, userReferenceID)
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var data clientpkg.ErrorResponse
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, clientpkg.NewError(resp.StatusCode, data.Message)
+	}
+
+	var data []*FeedItem
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 func (c *client) LikePost(postReferenceID, userReferenceID string) error {

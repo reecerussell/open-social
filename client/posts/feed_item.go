@@ -11,4 +11,5 @@ type FeedItem struct {
 	Username     string    `json:"username"`
 	Likes        int       `json:"likes"`
 	HasUserLiked bool      `json:"hasUserLiked"`
+	IsAuthor     bool      `json:"isAuthor"`
 }

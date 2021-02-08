@@ -77,3 +77,18 @@ func (mr *MockClientMockRecorder) GetIDByReference(referenceID interface{}) *gom
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIDByReference", reflect.TypeOf((*MockClient)(nil).GetIDByReference), referenceID)
 }
+
+// GetProfile mocks base method.
+func (m *MockClient) GetProfile(username, userReferenceID string) (*users.Profile, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProfile", username, userReferenceID)
+	ret0, _ := ret[0].(*users.Profile)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetProfile indicates an expected call of GetProfile.
+func (mr *MockClientMockRecorder) GetProfile(username, userReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfile", reflect.TypeOf((*MockClient)(nil).GetProfile), username, userReferenceID)
+}
