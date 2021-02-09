@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
 	mock "github.com/reecerussell/open-social/mock/database"
@@ -121,7 +122,7 @@ func TestPostProvider_GetProfileFeed_ReturnsProfileFeed(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	testUserReferenceID := "3740423"
+	testUserReferenceID := uuid.New()
 	testPostID := "2349734"
 	testMediaID := "3204703"
 	testCaption := "Hello World"
@@ -179,7 +180,7 @@ func TestPostProvider_GetProfileFeedQueryFails_ReturnsError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	testUserReferenceID := "3740423"
+	testUserReferenceID := uuid.New()
 	testUsername := "test"
 	testCtx := context.Background()
 	testError := errors.New("an error occured")
@@ -197,7 +198,7 @@ func TestPostProvider_GetProfileFeedScanFails_ReturnsError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	testUserReferenceID := "3740423"
+	testUserReferenceID := uuid.New()
 	testUsername := "test"
 	testCtx := context.Background()
 	testError := errors.New("an error occured")
@@ -219,7 +220,7 @@ func TestPostProvider_GetProfileFeedRowsErrors_ReturnsError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	testUserReferenceID := "3740423"
+	testUserReferenceID := uuid.New()
 	testUsername := "test"
 	testCtx := context.Background()
 	testError := errors.New("an error occured")

@@ -7,6 +7,7 @@ package mock
 import (
 	context "context"
 	gomock "github.com/golang/mock/gomock"
+	uuid "github.com/google/uuid"
 	dto "github.com/reecerussell/open-social/cmd/posts/dto"
 	reflect "reflect"
 )
@@ -50,7 +51,7 @@ func (mr *MockPostProviderMockRecorder) Get(ctx, postReferenceID, userReferenceI
 }
 
 // GetProfileFeed mocks base method.
-func (m *MockPostProvider) GetProfileFeed(ctx context.Context, username, userReferenceID string) ([]*dto.FeedItem, error) {
+func (m *MockPostProvider) GetProfileFeed(ctx context.Context, username string, userReferenceID uuid.UUID) ([]*dto.FeedItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProfileFeed", ctx, username, userReferenceID)
 	ret0, _ := ret[0].([]*dto.FeedItem)

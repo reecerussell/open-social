@@ -44,6 +44,7 @@ func main() {
 	app.PostFunc("/posts", postHandler.Create)
 	app.GetFunc("/posts/{id}", postHandler.GetPost)
 	app.GetFunc("/feed", postHandler.GetFeed)
+	app.GetFunc("/profile/{username}", userHandler.GetProfile)
 
 	go app.Serve()
 
@@ -95,7 +96,8 @@ func buildServices() *core.Container {
 	ctn.AddService("UserHandler", func(ctn *core.Container) interface{} {
 		client := ctn.GetService("UserClient").(users.Client)
 		authClient := ctn.GetService("AuthClient").(auth.Client)
-		h := handler.NewUserHandler(client, authClient)
+		postsClient := ctn.GetService("PostClient").(posts.Client)
+		h := handler.NewUserHandler(client, authClient, postsClient)
 		return h
 	})
 

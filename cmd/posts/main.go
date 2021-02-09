@@ -39,7 +39,7 @@ func main() {
 	app.Post("/posts/like", likePost)
 	app.Post("/posts/unlike", unlikePost)
 	app.Get("/feed/{userReferenceId}", feedhandler)
-	app.Get("/profile/feed/{username/{userReferenceID}", profileFeedHandler)
+	app.Get("/profile/feed/{username}/{userReferenceID}", profileFeedHandler)
 
 	go app.Serve()
 

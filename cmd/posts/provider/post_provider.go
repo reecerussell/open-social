@@ -5,6 +5,10 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/google/uuid"
+
+	mssql "github.com/denisenkom/go-mssqldb"
+
 	"github.com/reecerussell/open-social/cmd/posts/dto"
 	"github.com/reecerussell/open-social/database"
 )
@@ -17,7 +21,7 @@ var (
 // PostProvider is used to read post data.
 type PostProvider interface {
 	Get(ctx context.Context, postReferenceID, userReferenceID string) (*dto.Post, error)
-	GetProfileFeed(ctx context.Context, username, userReferenceID string) ([]*dto.FeedItem, error)
+	GetProfileFeed(ctx context.Context, username string, userReferenceID uuid.UUID) ([]*dto.FeedItem, error)
 }
 
 type postProvider struct {
@@ -81,7 +85,7 @@ func (p *postProvider) Get(ctx context.Context, postReferenceID, userReferenceID
 	return &post, nil
 }
 
-func (p *postProvider) GetProfileFeed(ctx context.Context, username, userReferenceID string) ([]*dto.FeedItem, error) {
+func (p *postProvider) GetProfileFeed(ctx context.Context, username string, userReferenceID uuid.UUID) ([]*dto.FeedItem, error) {
 	const query = `SELECT 
 		CAST([P].[ReferenceId] AS CHAR(36)) AS [ReferenceId],
 		CAST([M].[ReferenceId] AS CHAR(36)) AS [MediaReferenceId],
@@ -101,7 +105,9 @@ func (p *postProvider) GetProfileFeed(ctx context.Context, username, userReferen
 	WHERE [U].[Username] = @username
 	ORDER BY [P].[Posted] DESC;`
 
-	rows, err := p.db.Multiple(ctx, query, sql.Named("username", username), sql.Named("userReferenceId", userReferenceID))
+	rows, err := p.db.Multiple(ctx, query,
+		sql.Named("username", username),
+		sql.Named("userReferenceId", mssql.UniqueIdentifier(userReferenceID)))
 	if err != nil {
 		return nil, err
 	}
