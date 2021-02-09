@@ -1,12 +1,10 @@
 # Open Social
 
-# Schema
+ This is a port of https://github.com/reecerussell/social-media.
 
-## Users
+## Stack
 
-| Column       | Type         |
-| ------------ | ------------ |
-| Id           | int          |
-| ReferenceId  | uuid         |
-| Username     | varchar(20)  |
-| PasswordHash | varchar(max) |
+- Golang
+- ReactJS/Node
+- SQL Server
+
