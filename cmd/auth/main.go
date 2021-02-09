@@ -28,7 +28,7 @@ func main() {
 
 	userHandler := ctn.GetService("TokenHandler").(*handler.TokenHandler)
 
-	app := core.NewApp("0.0.0.0:80")
+	app := core.NewApp()
 	app.AddMiddleware(core.NewLoggingMiddleware())
 
 	app.Post("/token", userHandler)

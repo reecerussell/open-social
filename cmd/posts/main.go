@@ -30,7 +30,7 @@ func main() {
 	unlikePost := ctn.GetService("UnlikePostHandler").(*handler.UnlikePostHandler)
 	getPost := ctn.GetService("GetPostHandler").(*handler.GetPostHandler)
 
-	app := core.NewApp("0.0.0.0:80")
+	app := core.NewApp()
 	app.AddHealthCheck(database.NewHealthCheck(db))
 	app.AddMiddleware(core.NewLoggingMiddleware())
 

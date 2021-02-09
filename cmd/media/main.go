@@ -25,7 +25,7 @@ func main() {
 	createMedia := ctn.GetService("CreateMediaHandler").(*handler.CreateMediaHandler)
 	getMediaContent := ctn.GetService("GetMediaContentHandler").(*handler.GetMediaContentHandler)
 
-	app := core.NewApp("0.0.0.0:80")
+	app := core.NewApp()
 	app.AddHealthCheck(database.NewHealthCheck(db))
 	app.AddMiddleware(core.NewLoggingMiddleware())
 

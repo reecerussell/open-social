@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	repoMock "github.com/reecerussell/open-social/cmd/media/mock/repository"
+	"github.com/reecerussell/open-social/cmd/media/repository"
 	"github.com/reecerussell/open-social/mock/media"
-	"github.com/reecerussell/open-social/service/media/repository"
 )
 
 func TestGetMediaContentHandler(t *testing.T) {

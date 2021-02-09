@@ -29,10 +29,10 @@ services:
             context: .
             dockerfile: ./cmd/backend/Dockerfile
         environment:
-            USERS_API_URL: http://users:80
-            AUTH_API_URL: http://auth:80
-            POSTS_API_URL: http://posts:80
-            MEDIA_API_URL: http://media:80
+            USERS_API_URL: http://users:9292
+            AUTH_API_URL: http://auth:9292
+            POSTS_API_URL: http://posts:9292
+            MEDIA_API_URL: http://media:9292
             TOKEN_PUBLIC_KEY: /app/token-rsa.dev.pub
         volumes:
             - ./token-rsa.dev.pub:/app/token-rsa.dev.pub
@@ -60,7 +60,7 @@ services:
             context: .
             dockerfile: ./cmd/auth/Dockerfile
         environment:
-            USERS_API_URL: http://users:80
+            USERS_API_URL: http://users:9292
             TOKEN_PRIVATE_KEY: /app/token-rsa.dev.pem
         volumes:
             - ./token-rsa.dev.pem:/app/token-rsa.dev.pem
@@ -76,7 +76,7 @@ services:
             dockerfile: ./cmd/posts/Dockerfile
         environment:
             CONNECTION_STRING: ${CONNECTION_STRING}
-            USERS_API_URL: http://users:80
+            USERS_API_URL: http://users:9292
             KAFKA_HOSY: kafka:9093
         networks:
             - open-social
@@ -104,7 +104,7 @@ services:
             context: .
             dockerfile: ./cmd/media-download/Dockerfile
         environment:
-            MEDIA_API_URL: http://media
+            MEDIA_API_URL: http://media:9292
         networks:
             - open-social
         depends_on:

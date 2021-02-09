@@ -33,7 +33,7 @@ func main() {
 	postHandler := ctn.GetService("PostHandler").(*handler.PostHandler)
 	authMiddleware := ctn.GetService("AuthMiddleware").(*middleware.Authentication)
 
-	app := core.NewApp("0.0.0.0:80")
+	app := core.NewApp()
 	app.AddMiddleware(core.NewLoggingMiddleware())
 	app.AddMiddleware(middleware.NewCors())
 	app.AddMiddleware(authMiddleware)

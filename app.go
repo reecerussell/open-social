@@ -1,11 +1,19 @@
 package core
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/reecerussell/open-social/util"
 )
+
+// PortEnvVar is the name of the environment variable user to read the port value.
+const PortEnvVar = "PORT"
+
+// DefaultPort is the default port number to use if the PortEnvVar is not set.
+const DefaultPort = "8080"
 
 // App pulls together components of a HTTP api, such as middleware, health checks
 // and routing.
@@ -19,9 +27,11 @@ type App struct {
 }
 
 // NewApp returns a new instance of App.
-func NewApp(addr string) *App {
+func NewApp() *App {
+	port := util.ReadEnv(PortEnvVar, DefaultPort)
+
 	return &App{
-		addr:         addr,
+		addr:         fmt.Sprintf("0.0.0.0:%s", port),
 		router:       mux.NewRouter(),
 		healthChecks: []HealthCheck{},
 		HealthPath:   "/health",

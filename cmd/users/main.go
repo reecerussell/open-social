@@ -30,9 +30,9 @@ func main() {
 	createUser := ctn.GetService("CreateUserHandler").(*handler.CreateUserHandler)
 	getClaims := ctn.GetService("GetClaimsHandler").(*handler.GetClaimsHandler)
 	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
-	getProfile := ctn.GetService("UserProvider").(*handler.GetProfileHandler)
+	getProfile := ctn.GetService("GetProfileHandler").(*handler.GetProfileHandler)
 
-	app := core.NewApp("0.0.0.0:80")
+	app := core.NewApp()
 	app.AddHealthCheck(database.NewHealthCheck(db))
 	app.AddMiddleware(core.NewLoggingMiddleware())
 

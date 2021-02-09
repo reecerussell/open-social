@@ -19,7 +19,7 @@ func main() {
 
 	downloadHandler := ctn.GetService("DownloadHandler").(*handler.DownloadHandler)
 
-	app := core.NewApp("0.0.0.0:80")
+	app := core.NewApp()
 	app.AddMiddleware(core.NewLoggingMiddleware())
 
 	app.Get("/{referenceID}", downloadHandler)
