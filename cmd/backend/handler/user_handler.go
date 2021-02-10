@@ -53,7 +53,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	user, err := h.client.Create(&data)
 	if err != nil {
 		switch e := err.(type) {
-		case *users.Error:
+		case *client.Error:
 			h.RespondError(w, e, e.StatusCode)
 			return
 		default:
@@ -101,7 +101,7 @@ func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	profile, err := h.client.GetProfile(username, userID)
 	if err != nil {
 		switch e := err.(type) {
-		case *users.Error:
+		case *client.Error:
 			h.RespondError(w, e, e.StatusCode)
 			return
 		default:
@@ -110,7 +110,6 @@ func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Printf("Fetching profile feed: %s...\n", username)
 	feed, err := h.posts.GetProfileFeed(username, userID)
 	if err != nil {
 		log.Printf("Error: %v\n", err)

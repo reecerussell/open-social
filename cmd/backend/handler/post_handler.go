@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"encoding/base64"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -51,8 +50,6 @@ func (h *PostHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	userID := ctx.Value(core.ContextKey("uid")).(string)
 	caption := r.FormValue("caption")
-
-	log.Printf("Caption: %s\n", caption)
 
 	post, err := h.client.Create(&posts.CreateRequest{
 		UserReferenceID: userID,
