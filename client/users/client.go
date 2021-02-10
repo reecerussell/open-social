@@ -1,11 +1,9 @@
 package users
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"time"
+
+	"github.com/reecerussell/open-social/client"
 )
 
 // Client is an interface used to interact with the users API.
@@ -18,137 +16,52 @@ type Client interface {
 
 // New returns a new instance of Client.
 func New(url string) Client {
-	return &client{
-		url: url,
-		http: &http.Client{
-			Timeout: time.Second * 10,
-		},
+	return &usersClient{
+		base: client.NewHTTP(url),
 	}
 }
 
-type client struct {
-	url  string
-	http *http.Client
+type usersClient struct {
+	base client.HTTP
 }
 
-func (c *client) Create(in *CreateUserRequest) (*CreateUserResponse, error) {
-	jsonBytes, _ := json.Marshal(in)
-	body := bytes.NewBuffer(jsonBytes)
-
-	url := c.url + "/users"
-	req, _ := http.NewRequest(http.MethodPost, url, body)
-
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK {
-		var data CreateUserResponse
-		err = json.NewDecoder(resp.Body).Decode(&data)
-		if err != nil {
-			return nil, err
-		}
-
-		return &data, nil
-	}
-
-	var data ErrorResponse
-	err = json.NewDecoder(resp.Body).Decode(&data)
+func (c *usersClient) Create(in *CreateUserRequest) (*CreateUserResponse, error) {
+	var resp CreateUserResponse
+	err := c.base.Post("/users", in, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, NewError(resp.StatusCode, data.Message)
+	return &resp, nil
 }
 
-func (c *client) GetClaims(in *GetClaimsRequest) (*GetClaimsResponse, error) {
-	jsonBytes, _ := json.Marshal(in)
-	body := bytes.NewBuffer(jsonBytes)
-
-	url := c.url + "/claims"
-	req, _ := http.NewRequest(http.MethodPost, url, body)
-
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK {
-		var data GetClaimsResponse
-		err = json.NewDecoder(resp.Body).Decode(&data)
-		if err != nil {
-			return nil, err
-		}
-
-		return &data, nil
-	}
-
-	var data ErrorResponse
-	err = json.NewDecoder(resp.Body).Decode(&data)
+func (c *usersClient) GetClaims(in *GetClaimsRequest) (*GetClaimsResponse, error) {
+	var resp GetClaimsResponse
+	err := c.base.Post("/claims", in, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, NewError(resp.StatusCode, data.Message)
+	return &resp, nil
 }
 
-func (c *client) GetIDByReference(referenceID string) (*int, error) {
-	url := c.url + "/users/id/" + referenceID
-	req, _ := http.NewRequest(http.MethodGet, url, nil)
-
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK {
-		var data GetIDByReferenceResponse
-		err = json.NewDecoder(resp.Body).Decode(&data)
-		if err != nil {
-			return nil, err
-		}
-
-		return &data.ID, nil
-	}
-
-	var data ErrorResponse
-	err = json.NewDecoder(resp.Body).Decode(&data)
+func (c *usersClient) GetIDByReference(referenceID string) (*int, error) {
+	var resp GetIDByReferenceResponse
+	err := c.base.Get("/users/id/"+referenceID, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, NewError(resp.StatusCode, data.Message)
+	return &resp.ID, nil
 }
 
-func (c *client) GetProfile(username, userReferenceID string) (*Profile, error) {
-	url := fmt.Sprintf("%s/profile/%s/%s", c.url, username, userReferenceID)
-	req, _ := http.NewRequest(http.MethodGet, url, nil)
-
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		var data ErrorResponse
-		err = json.NewDecoder(resp.Body).Decode(&data)
-		if err != nil {
-			return nil, err
-		}
-
-		return nil, NewError(resp.StatusCode, data.Message)
-	}
-
-	var data Profile
-	err = json.NewDecoder(resp.Body).Decode(&data)
+func (c *usersClient) GetProfile(username, userReferenceID string) (*Profile, error) {
+	var profile Profile
+	url := fmt.Sprintf("/profile/%s/%s", username, userReferenceID)
+	err := c.base.Get(url, &profile)
 	if err != nil {
 		return nil, err
 	}
 
-	return &data, nil
+	return &profile, nil
 }
