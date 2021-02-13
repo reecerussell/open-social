@@ -7,6 +7,7 @@ This is a port of https://github.com/reecerussell/social-media.
 -   Golang
 -   ReactJS/Node
 -   SQL Server
+-   Google Cloud Platform
 
 ## Development
 
@@ -30,3 +31,7 @@ NPM is used to start the frontend locally, exposing it on port 3000.
 cd ui
 npm start
 ```
+
+## Google Cloud Platform
+
+Currently, this is built to use GCP storage buckets as a filestore for the media service. The media service uses an interface which can be implemented for other services, such as AWS or Azure.
