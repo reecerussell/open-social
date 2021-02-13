@@ -8,6 +8,7 @@ import (
 	"github.com/reecerussell/gojwt"
 
 	core "github.com/reecerussell/open-social"
+	"github.com/reecerussell/open-social/client"
 	"github.com/reecerussell/open-social/client/users"
 )
 
@@ -43,7 +44,7 @@ func (h *TokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	claims, err := h.client.GetClaims(&data)
 	if err != nil {
 		switch e := err.(type) {
-		case *users.Error:
+		case *client.Error:
 			h.RespondError(w, e, e.StatusCode)
 			return
 		default:
