@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 
-const Layout = ({ children }) => (
+const Layout = ({ children, userInfo }) => (
     <Container className="sections">
         <Row>
             <Col md="4" className="mb-4 mb-md-0">
@@ -19,11 +20,19 @@ const Layout = ({ children }) => (
                                 ></div>
                             </a>
                             <p>
-                                <a className="text-secondary" href="/">
-                                    <b>test-username</b>
-                                </a>
+                                <Link
+                                    to={"/u/" + userInfo.username}
+                                    className="text-secondary"
+                                >
+                                    <b>{userInfo.username}</b>
+                                </Link>
                                 <br />
-                                <span className="text-muted">6 Followers</span>
+                                <span className="text-muted">
+                                    {userInfo.followerCount}
+                                    {userInfo.followerCount == 1
+                                        ? " Follower"
+                                        : " Followers"}
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -35,9 +44,12 @@ const Layout = ({ children }) => (
                             </Link>
                         </ListGroupItem>
                         <ListGroupItem>
-                            <a href="/" className="d-block text-secondary">
+                            <Link
+                                to={"/u/" + userInfo.username}
+                                className="d-block text-secondary"
+                            >
                                 <i className="fas fa-user-alt"></i> Profile
-                            </a>
+                            </Link>
                         </ListGroupItem>
                         <ListGroupItem>
                             <a href="/" className="d-block text-secondary">
@@ -51,5 +63,14 @@ const Layout = ({ children }) => (
         </Row>
     </Container>
 );
+
+Layout.propTypes = {
+    userInfo: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
+        mediaId: PropTypes.string,
+        followerCount: PropTypes.number.isRequired,
+    }),
+};
 
 export default Layout;
