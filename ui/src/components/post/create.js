@@ -22,11 +22,11 @@ const Create = ({ error, loading, submitPost }) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        const formData = new FormData()
-        formData.append("caption", post.caption)
+        const formData = new FormData();
+        formData.append("caption", post.caption);
 
         if (post.file) {
-            formData.append("file", post.file, post.file.name)
+            formData.append("file", post.file, post.file.name);
         }
 
         submitPost(formData);
@@ -44,10 +44,10 @@ const Create = ({ error, loading, submitPost }) => {
 
         if (files.length > 0) {
             setImageUploadText(files[0].name);
-            setPost({...post, file: files[0]})
+            setPost({ ...post, file: files[0] });
         } else {
             setImageUploadText(defaultImageUploadText);
-            setPost({...post, file: null})
+            setPost({ ...post, file: null });
         }
     };
 
@@ -115,8 +115,8 @@ Create.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    error: state.post.error,
-    loading: state.post.loading,
+    error: state.posts.error,
+    loading: state.posts.loading,
 });
 
 const mapDispatchToProps = dispatch =>
