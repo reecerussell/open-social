@@ -31,7 +31,7 @@ func main() {
 	getClaims := ctn.GetService("GetClaimsHandler").(*handler.GetClaimsHandler)
 	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
 	getProfile := ctn.GetService("GetProfileHandler").(*handler.GetProfileHandler)
-	getInfo := ctn.GetService("GetProfileHandler").(*handler.GetInfoHandler)
+	getInfo := ctn.GetService("GetInfoHandler").(*handler.GetInfoHandler)
 
 	app := core.NewApp()
 	app.AddHealthCheck(database.NewHealthCheck(db))
