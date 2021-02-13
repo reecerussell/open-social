@@ -31,6 +31,7 @@ func main() {
 	getClaims := ctn.GetService("GetClaimsHandler").(*handler.GetClaimsHandler)
 	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
 	getProfile := ctn.GetService("GetProfileHandler").(*handler.GetProfileHandler)
+	getInfo := ctn.GetService("GetProfileHandler").(*handler.GetInfoHandler)
 
 	app := core.NewApp()
 	app.AddHealthCheck(database.NewHealthCheck(db))
@@ -40,6 +41,7 @@ func main() {
 	app.Get("/users/id/{referenceId}", getIDByReference)
 	app.Post("/claims", getClaims)
 	app.Get("/profile/{username}/{userReferenceID}", getProfile)
+	app.Get("/info/{userReferenceID}", getInfo)
 
 	go app.Serve()
 
@@ -140,6 +142,12 @@ func buildServices(cnf *Config) *core.Container {
 		provider := ctn.GetService("UserProvider").(provider.UserProvider)
 
 		return handler.NewGetProfileHandler(provider)
+	})
+
+	ctn.AddService("GetInfoHandler", func(ctn *core.Container) interface{} {
+		provider := ctn.GetService("UserProvider").(provider.UserProvider)
+
+		return handler.NewGetInfoHandler(provider)
 	})
 
 	return ctn
