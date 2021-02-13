@@ -39,6 +39,7 @@ func main() {
 	app.AddMiddleware(authMiddleware)
 
 	app.PostFunc("/users/register", userHandler.Register)
+	app.GetFunc("/users/info", userHandler.GetInfo)
 	app.PostFunc("/posts/like/{id}", postHandler.Like)
 	app.PostFunc("/posts/unlike/{id}", postHandler.Unlike)
 	app.PostFunc("/posts", postHandler.Create)
