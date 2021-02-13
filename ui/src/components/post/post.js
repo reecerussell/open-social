@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -6,12 +6,30 @@ import { bindActionCreators } from "redux";
 import { Image, FormattedDate } from "../shared";
 import { postApi } from "../../api";
 
-const Post = ({ post, loading, error, loadPost, likePost, unlikePost }) => {
+const defaultState = {
+    id: "",
+    mediaId: null,
+    posted: new Date().toISOString(),
+    username: "",
+    caption: "",
+    likes: 0,
+    hasLiked: false,
+};
+
+const Post = ({ posts, loading, error, loadPost, likePost, unlikePost }) => {
     const { id } = useParams();
+    const [post, setPost] = useState(defaultState);
 
     useEffect(() => {
         loadPost(id);
     }, [loadPost, id]);
+
+    useEffect(() => {
+        const post = posts.find(p => p.id === id);
+        if (post) {
+            setPost(post);
+        }
+    }, [posts, id]);
 
     const handleLikeClick = () => {
         if (loading) {
@@ -75,31 +93,34 @@ const Post = ({ post, loading, error, loadPost, likePost, unlikePost }) => {
 };
 
 Post.propTypes = {
-    post: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        mediaId: PropTypes.string,
-        posted: PropTypes.string.isRequired,
-        username: PropTypes.string.isRequired,
-        caption: PropTypes.string.isRequired,
-        likes: PropTypes.number.isRequired,
-        hasLiked: PropTypes.bool.isRequired,
-        unlikePost: PropTypes.bool.isRequired,
-    }).isRequired,
+    posts: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            mediaId: PropTypes.string,
+            posted: PropTypes.string.isRequired,
+            username: PropTypes.string.isRequired,
+            caption: PropTypes.string.isRequired,
+            likes: PropTypes.number.isRequired,
+            hasLiked: PropTypes.bool.isRequired,
+        }).isRequired
+    ),
     error: PropTypes.string,
     loading: PropTypes.bool,
     loadPost: PropTypes.func.isRequired,
     likePost: PropTypes.func.isRequired,
+    unlikePost: PropTypes.func.isRequired,
 };
 
 Post.defaultProps = {
+    posts: [],
     error: null,
     loading: false,
 };
 
 const mapStateToProps = state => ({
-    post: state.post,
-    error: state.post.error,
-    loading: state.post.loading,
+    posts: state.posts.posts,
+    error: state.posts.error,
+    loading: state.posts.loading,
 });
 
 const mapDispatchToProps = dispatch =>

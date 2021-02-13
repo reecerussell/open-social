@@ -4,7 +4,8 @@ const initialState = {
         loading: false,
         error: null,
     },
-    post: {
+    posts: {
+        posts: [],
         loading: false,
         error: null,
     },

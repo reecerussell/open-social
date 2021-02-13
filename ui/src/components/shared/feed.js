@@ -31,40 +31,31 @@ const Feed = ({ items, likePost, unlikePost }) => {
             <div className="p-4">
                 <div className="post-user-info">
                     <p>
-                        <Link
-                            to={"/post/" + item.id}
-                            className="text-secondary"
-                        >
+                        <Link to={"/p/" + item.id} className="text-secondary">
                             <b>
                                 {item.likes === 1
                                     ? item.likes + " Like"
                                     : item.likes + " Likes"}
                             </b>
                         </Link>{" "}
-                        <Link
-                            to={"/post/" + item.id}
-                            className="text-secondary"
-                        >
+                        <Link to={"/p/" + item.id} className="text-secondary">
                             <b>0 Comments</b>
                         </Link>
                         <br />
                         <b>
-                            <a href="/" className="text-secondary">
+                            <Link
+                                to={"/u/" + item.username}
+                                className="text-secondary"
+                            >
                                 {item.username}
-                            </a>
+                            </Link>
                         </b>{" "}
-                        <Link
-                            to={"/post/" + item.id}
-                            className="text-secondary"
-                        >
+                        <Link to={"/p/" + item.id} className="text-secondary">
                             {item.caption}
                         </Link>
                         <br />
                         <small>
-                            <Link
-                                to={"/post/" + item.id}
-                                className="text-muted"
-                            >
+                            <Link to={"/p/" + item.id} className="text-muted">
                                 <FormattedDate value={item.posted} />
                             </Link>
                         </small>

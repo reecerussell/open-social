@@ -8,10 +8,10 @@ const updatePostLikedStatus = (feedItems, id, liked) => {
         const feedItem = feedItems[i];
         if (feedItem.id === id) {
             if (liked) {
-                feedItem.hasUserLiked = true;
+                feedItem.hasLiked = true;
                 feedItem.likes += 1;
             } else {
-                feedItem.hasUserLiked = false;
+                feedItem.hasLiked = false;
                 feedItem.likes -= 1;
             }
         }
@@ -22,7 +22,7 @@ const updatePostLikedStatus = (feedItems, id, liked) => {
     return newItems;
 };
 
-const profileReducer = (state = initialState.post, action) => {
+const profileReducer = (state = initialState.profile, action) => {
     switch (action.type) {
         case profileTypes.LOAD_PROFILE:
             return {
