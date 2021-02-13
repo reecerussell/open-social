@@ -47,7 +47,7 @@ const Post = ({ post, loading, error, loadPost, likePost, unlikePost }) => {
                         ></div>
                     </a>
                     <p>
-                        {post.likes == 1
+                        {post.likes === 1
                             ? post.likes + " Like"
                             : post.likes + " Likes"}
                         <br />

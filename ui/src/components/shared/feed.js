@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { postApi } from "../../api";
 import { Image, FormattedDate } from "../shared";
 
-const Feed = ({items, likePost, unlikePost}) => {
+const Feed = ({ items, likePost, unlikePost }) => {
     const handleLikePost = post => e => {
         e.preventDefault();
 
@@ -23,6 +23,7 @@ const Feed = ({items, likePost, unlikePost}) => {
                 <Image
                     id={item.mediaId}
                     className="img-fluid"
+                    alt={item.caption}
                     onDoubleClick={handleLikePost(item)}
                 />
             )}
@@ -72,7 +73,7 @@ const Feed = ({items, likePost, unlikePost}) => {
             </div>
         </div>
     ));
-}
+};
 
 Feed.propTypes = {
     items: PropTypes.arrayOf(

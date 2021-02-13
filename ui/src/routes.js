@@ -1,6 +1,7 @@
 import Feed from "./components/feed";
 import { Create, Post } from "./components/post";
 import { Layout } from "./components/layout";
+import Profile from "./components/profile";
 
 const routes = [
     {
@@ -18,6 +19,11 @@ const routes = [
     {
         path: "/post/:id",
         component: Post,
+        layout: Layout,
+    },
+    {
+        path: "/u/:username",
+        component: Profile,
         layout: Layout,
     },
 ];
