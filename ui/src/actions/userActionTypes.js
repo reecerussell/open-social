@@ -1,0 +1,3 @@
+export const LOAD_INFO = "LOAD_INFO";
+export const LOAD_INFO_SUCCESS = "LOAD_INFO_SUCCESS";
+export const LOAD_INFO_ERROR = "LOAD_INFO_ERROR";

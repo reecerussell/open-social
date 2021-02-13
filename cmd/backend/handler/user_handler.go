@@ -130,3 +130,23 @@ func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	h.Respond(w, resp)
 }
+
+// GetInfo handles requests to get information for a user.
+func (h *UserHandler) GetInfo(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	info, err := h.client.GetInfo(userID)
+	if err != nil {
+		switch e := err.(type) {
+		case *client.Error:
+			h.RespondError(w, e, e.StatusCode)
+			return
+		default:
+			h.RespondError(w, err, http.StatusInternalServerError)
+			return
+		}
+	}
+
+	h.Respond(w, info)
+}

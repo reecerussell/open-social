@@ -45,6 +45,7 @@ func main() {
 	app.GetFunc("/posts/{id}", postHandler.GetPost)
 	app.GetFunc("/feed", postHandler.GetFeed)
 	app.GetFunc("/profile/{username}", userHandler.GetProfile)
+	app.GetFunc("/me", userHandler.GetInfo)
 
 	go app.Serve()
 

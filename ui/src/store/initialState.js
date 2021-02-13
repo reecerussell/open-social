@@ -23,6 +23,14 @@ const initialState = {
         loading: false,
         error: null,
     },
+    user: {
+        id: "",
+        username: "",
+        followerCount: 0,
+        mediaId: null,
+        error: null,
+        loading: false,
+    },
 };
 
 export default initialState;

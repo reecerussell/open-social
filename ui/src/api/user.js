@@ -1,5 +1,5 @@
 import { get } from "../utils/api";
-import { profileActions } from "../actions";
+import { profileActions, userActions } from "../actions";
 
 const fetchProfile = username => dispatch => {
     dispatch(profileActions.loadProfile());
@@ -17,4 +17,18 @@ const fetchProfile = username => dispatch => {
         );
 };
 
-export { fetchProfile };
+const fetchInfo = () => dispatch => {
+    dispatch(userActions.loadInfo());
+
+    return get("me")
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.error);
+            }
+
+            dispatch(userActions.loadInfoSuccess(res.data));
+        })
+        .catch(err => dispatch(userActions.loadInfoError(err.toString())));
+};
+
+export { fetchProfile, fetchInfo };
