@@ -12,6 +12,7 @@ type Client interface {
 	GetClaims(in *GetClaimsRequest) (*GetClaimsResponse, error)
 	GetIDByReference(referenceID string) (*int, error)
 	GetProfile(username, userReferenceID string) (*Profile, error)
+	GetInfo(userReferenceID string) (*Info, error)
 }
 
 // New returns a new instance of Client.
@@ -64,4 +65,15 @@ func (c *usersClient) GetProfile(username, userReferenceID string) (*Profile, er
 	}
 
 	return &profile, nil
+}
+
+func (c *usersClient) GetInfo(userReferenceID string) (*Info, error) {
+	var info Info
+	url := fmt.Sprintf("/info/%s", userReferenceID)
+	err := c.base.Get(url, &info)
+	if err != nil {
+		return nil, err
+	}
+
+	return &info, nil
 }

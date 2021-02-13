@@ -192,3 +192,44 @@ func TestGetProfile_RequestFails_ReturnsError(t *testing.T) {
 	assert.Nil(t, profile)
 	assert.Equal(t, testError, err)
 }
+
+func TestGetInfo_GivenValidData_ReturnsInfo(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testReferenceID := "304324"
+
+	expectedURL := fmt.Sprintf("/info/%s", testReferenceID)
+	mockHTTP := mock.NewMockHTTP(ctrl)
+	mockHTTP.EXPECT().Get(expectedURL, gomock.Any()).
+		DoAndReturn(func(url string, respDest interface{}) error {
+			resp := respDest.(*Info)
+			resp.Username = "test"
+
+			return nil
+		})
+
+	c := &usersClient{base: mockHTTP}
+
+	info, err := c.GetInfo(testReferenceID)
+	assert.NoError(t, err)
+	assert.Equal(t, "test", info.Username)
+}
+
+func TestGetInfo_RequestFails_ReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testReferenceID := "304324"
+	testError := errors.New("an error occured")
+
+	expectedURL := fmt.Sprintf("/info/%s", testReferenceID)
+	mockHTTP := mock.NewMockHTTP(ctrl)
+	mockHTTP.EXPECT().Get(expectedURL, gomock.Any()).Return(testError)
+
+	c := &usersClient{base: mockHTTP}
+
+	info, err := c.GetInfo(testReferenceID)
+	assert.Nil(t, info)
+	assert.Equal(t, testError, err)
+}
