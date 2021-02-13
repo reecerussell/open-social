@@ -84,7 +84,7 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 			[P].[Posted],
 			[U].[Username],
 			[dbo].GetPostLikes([P].[Id]) AS [Likes],
-			[dbo].HasUserLikedPost([P].[Id], [U].[Id]) AS [HasUserLiked]
+			[dbo].HasUserLikedPost([P].[Id], [U].[Id]) AS [HasLiked]
 		FROM [Posts] AS [P]
 		INNER JOIN [Users] AS [U] ON [U].[Id] = [P].[UserId]
 		LEFT JOIN [Media] AS [M] ON [M].[Id] = [P].[MediaId]
@@ -97,7 +97,7 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 			[P].[Posted],
 			[U].[Username],
 			[dbo].GetPostLikes([P].[Id]) AS [Likes],
-			[dbo].HasUserLikedPost([P].[Id], [U].[Id]) AS [HasUserLiked]
+			[dbo].HasUserLikedPost([P].[Id], [U].[Id]) AS [HasLiked]
 		FROM [UserFollowers] AS [UF]
 		INNER JOIN [Posts] AS [P] ON [P].[UserId] = [UF].[FollowerId]
 		INNER JOIN [Users] AS [U] ON [U].[Id] = [P].[UserId]
@@ -111,7 +111,7 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 			[Posted],
 			[Username],
 			[Likes],
-			[HasUserLiked] 
+			[HasLiked] 
 		FROM [Feed]
 		ORDER BY [Posted] DESC`
 
@@ -138,7 +138,7 @@ func (r *postRepository) GetFeed(ctx context.Context, userReferenceID string) ([
 			&item.Posted,
 			&item.Username,
 			&item.Likes,
-			&item.HasUserLiked)
+			&item.HasLiked)
 		if err != nil {
 			return nil, err
 		}
@@ -179,7 +179,7 @@ func (r *postRepository) Get(ctx context.Context, referenceID, userReferenceID s
 					FROM [Likes] WHERE [ReferenceId] = @userReferenceId) 
 				WHEN 1 THEN CAST(1 AS BIT) 
 				ELSE CAST(0 AS BIT) 
-			END AS [HasUserLiked]
+			END AS [HasLiked]
 		FROM [Posts]
 		WHERE [ReferenceId] = @postReferenceId;`
 
@@ -201,7 +201,7 @@ func (r *postRepository) Get(ctx context.Context, referenceID, userReferenceID s
 			&post.Posted,
 			&post.Caption,
 			&post.LikeCount,
-			&post.HasUserLiked,
+			&post.HasLiked,
 		)
 	if err != nil {
 		if err == sql.ErrNoRows {

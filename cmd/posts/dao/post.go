@@ -13,6 +13,6 @@ type Post struct {
 	Posted      time.Time
 	Caption     string
 
-	LikeCount    int
-	HasUserLiked bool
+	LikeCount int
+	HasLiked  bool
 }

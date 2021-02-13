@@ -52,7 +52,7 @@ func (p *postProvider) Get(ctx context.Context, postReferenceID, userReferenceID
 					FROM [Likes] WHERE [UserReferenceId] = @userReferenceId) 
 				WHEN 1 THEN CAST(1 AS BIT) 
 				ELSE CAST(0 AS BIT) 
-			END AS [HasUserLiked]
+			END AS [HasLiked]
 		FROM [Posts] AS [P]
 		INNER JOIN [Users] AS [U] ON [U].[Id] = [P].[UserId]
 		LEFT JOIN [Media] AS [M] ON [M].[Id] = [P].[MediaId]
@@ -93,7 +93,7 @@ func (p *postProvider) GetProfileFeed(ctx context.Context, username string, user
 		[P].[Posted],
 		[U].[Username],
 		[dbo].GetPostLikes([P].[Id]) AS [Likes],
-		[dbo].HasUserLikedPost([P].[Id], [CU].[Id]) AS [HasUserLiked],
+		[dbo].HasUserLikedPost([P].[Id], [CU].[Id]) AS [HasLiked],
 		CASE [U].[Id]
 			WHEN [CU].[Id] THEN CAST(1 AS BIT)
 			ELSE CAST(0 AS BIT)
@@ -123,7 +123,7 @@ func (p *postProvider) GetProfileFeed(ctx context.Context, username string, user
 			&item.Posted,
 			&item.Username,
 			&item.Likes,
-			&item.HasUserLiked,
+			&item.HasLiked,
 			&item.IsAuthor,
 		)
 		if err != nil {

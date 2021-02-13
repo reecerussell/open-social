@@ -22,8 +22,8 @@ type Post struct {
 	posted      time.Time
 	caption     string
 
-	likeCount    int
-	hasUserLiked bool
+	likeCount int
+	hasLiked  bool
 }
 
 // NewPost returns a new instance of the Post domain model,
@@ -83,14 +83,14 @@ func (p *Post) SetReferenceID(referenceID string) {
 // Dao returns a data access object populated with the post's data.
 func (p *Post) Dao() *dao.Post {
 	return &dao.Post{
-		ID:           p.id,
-		ReferenceID:  p.referenceID,
-		MediaID:      p.mediaID,
-		UserID:       p.userID,
-		Posted:       p.posted,
-		Caption:      p.caption,
-		LikeCount:    p.likeCount,
-		HasUserLiked: p.hasUserLiked,
+		ID:          p.id,
+		ReferenceID: p.referenceID,
+		MediaID:     p.mediaID,
+		UserID:      p.userID,
+		Posted:      p.posted,
+		Caption:     p.caption,
+		LikeCount:   p.likeCount,
+		HasLiked:    p.hasLiked,
 	}
 }
 
@@ -99,21 +99,21 @@ func (p *Post) Dao() *dao.Post {
 // by the PostRepository, to instantiate new domain models.
 func PostFromDao(d *dao.Post) *Post {
 	return &Post{
-		id:           d.ID,
-		referenceID:  d.ReferenceID,
-		mediaID:      d.MediaID,
-		userID:       d.UserID,
-		posted:       d.Posted,
-		caption:      d.Caption,
-		likeCount:    d.LikeCount,
-		hasUserLiked: d.HasUserLiked,
+		id:          d.ID,
+		referenceID: d.ReferenceID,
+		mediaID:     d.MediaID,
+		userID:      d.UserID,
+		posted:      d.Posted,
+		caption:     d.Caption,
+		likeCount:   d.LikeCount,
+		hasLiked:    d.HasLiked,
 	}
 }
 
 // CanLike determines if a user can like this post or not. An error is returned,
 // if the user cannot like it.
 func (p *Post) CanLike() error {
-	if p.hasUserLiked {
+	if p.hasLiked {
 		return errors.New("user has already liked this post")
 	}
 
@@ -123,7 +123,7 @@ func (p *Post) CanLike() error {
 // CanUnlike determines if a user can unlike this post or not. An error is returned,
 // if the user cannot unlike it.
 func (p *Post) CanUnlike() error {
-	if !p.hasUserLiked {
+	if !p.hasLiked {
 		return errors.New("user has not liked this post")
 	}
 

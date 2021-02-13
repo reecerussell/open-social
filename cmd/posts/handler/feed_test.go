@@ -27,12 +27,12 @@ func TestFeedHandler(t *testing.T) {
 	mockRepo := repository.NewMockPostRepository(ctrl)
 	mockRepo.EXPECT().GetFeed(gomock.Any(), testUserReferenceID).Return([]*dto.FeedItem{
 		{
-			ID:           "23123",
-			Caption:      "Hello World",
-			Posted:       testPostedDate,
-			Username:     "User123",
-			Likes:        1,
-			HasUserLiked: false,
+			ID:       "23123",
+			Caption:  "Hello World",
+			Posted:   testPostedDate,
+			Username: "User123",
+			Likes:    1,
+			HasLiked: false,
 		},
 	}, nil)
 
@@ -63,7 +63,7 @@ func TestFeedHandler(t *testing.T) {
 	assert.Equal(t, string(expPostedDate), item["posted"])
 	assert.Equal(t, "User123", item["username"])
 	assert.Equal(t, float64(1), item["likes"])
-	assert.Equal(t, false, item["hasUserLiked"])
+	assert.Equal(t, false, item["hasLiked"])
 }
 
 func TestFeedHandler_RepoReturnsError_ReturnsInternalServerError(t *testing.T) {
