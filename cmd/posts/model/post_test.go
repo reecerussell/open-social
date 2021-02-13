@@ -55,25 +55,25 @@ func TestPost_SetReferenceID(t *testing.T) {
 
 func TestPost_Dao(t *testing.T) {
 	const (
-		testPostID       = 1
-		testReferenceID  = "3y294"
-		testUserID       = 23
-		testCaption      = "Hello World"
-		testLikeCount    = 12
-		testHasUserLiked = true
+		testPostID      = 1
+		testReferenceID = "3y294"
+		testUserID      = 23
+		testCaption     = "Hello World"
+		testLikeCount   = 12
+		testHasLiked    = true
 	)
 	testPostedDate := time.Now().UTC()
 	testMediaID := 321
 
 	post := &Post{
-		id:           testPostID,
-		referenceID:  testReferenceID,
-		mediaID:      &testMediaID,
-		userID:       testUserID,
-		posted:       testPostedDate,
-		caption:      testCaption,
-		likeCount:    testLikeCount,
-		hasUserLiked: testHasUserLiked,
+		id:          testPostID,
+		referenceID: testReferenceID,
+		mediaID:     &testMediaID,
+		userID:      testUserID,
+		posted:      testPostedDate,
+		caption:     testCaption,
+		likeCount:   testLikeCount,
+		hasLiked:    testHasLiked,
 	}
 
 	d := post.Dao()
@@ -85,30 +85,30 @@ func TestPost_Dao(t *testing.T) {
 	assert.Equal(t, testPostedDate, d.Posted)
 	assert.Equal(t, testCaption, d.Caption)
 	assert.Equal(t, testLikeCount, d.LikeCount)
-	assert.Equal(t, testHasUserLiked, d.HasUserLiked)
+	assert.Equal(t, testHasLiked, d.HasLiked)
 }
 
 func TestPostFromDao(t *testing.T) {
 	const (
-		testPostID       = 1
-		testReferenceID  = "3y294"
-		testUserID       = 23
-		testCaption      = "Hello World"
-		testLikeCount    = 12
-		testHasUserLiked = true
+		testPostID      = 1
+		testReferenceID = "3y294"
+		testUserID      = 23
+		testCaption     = "Hello World"
+		testLikeCount   = 12
+		testHasLiked    = true
 	)
 	testPostedDate := time.Now().UTC()
 	testMediaID := 10
 
 	d := &dao.Post{
-		ID:           testPostID,
-		ReferenceID:  testReferenceID,
-		MediaID:      &testMediaID,
-		UserID:       testUserID,
-		Posted:       testPostedDate,
-		Caption:      testCaption,
-		LikeCount:    testLikeCount,
-		HasUserLiked: testHasUserLiked,
+		ID:          testPostID,
+		ReferenceID: testReferenceID,
+		MediaID:     &testMediaID,
+		UserID:      testUserID,
+		Posted:      testPostedDate,
+		Caption:     testCaption,
+		LikeCount:   testLikeCount,
+		HasLiked:    testHasLiked,
 	}
 
 	post := PostFromDao(d)
@@ -120,7 +120,7 @@ func TestPostFromDao(t *testing.T) {
 	assert.Equal(t, testPostedDate, post.posted)
 	assert.Equal(t, testCaption, post.caption)
 	assert.Equal(t, testLikeCount, post.likeCount)
-	assert.Equal(t, testHasUserLiked, post.hasUserLiked)
+	assert.Equal(t, testHasLiked, post.hasLiked)
 }
 
 func TestPost_ReferenceID(t *testing.T) {
@@ -141,7 +141,7 @@ func TestPost_ID(t *testing.T) {
 
 func TestPost_CanLike(t *testing.T) {
 	post := &Post{
-		hasUserLiked: false,
+		hasLiked: false,
 	}
 
 	err := post.CanLike()
@@ -151,7 +151,7 @@ func TestPost_CanLike(t *testing.T) {
 func TestPost_CanLike_ReturnsError(t *testing.T) {
 	t.Run("User Already Liked", func(t *testing.T) {
 		post := &Post{
-			hasUserLiked: true,
+			hasLiked: true,
 		}
 
 		err := post.CanLike()
@@ -161,7 +161,7 @@ func TestPost_CanLike_ReturnsError(t *testing.T) {
 
 func TestPost_CanUnike(t *testing.T) {
 	post := &Post{
-		hasUserLiked: true,
+		hasLiked: true,
 	}
 
 	err := post.CanUnlike()
@@ -171,7 +171,7 @@ func TestPost_CanUnike(t *testing.T) {
 func TestPost_CanUnlike_ReturnsError(t *testing.T) {
 	t.Run("User Not Liked", func(t *testing.T) {
 		post := &Post{
-			hasUserLiked: false,
+			hasLiked: false,
 		}
 
 		err := post.CanUnlike()

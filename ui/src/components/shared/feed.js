@@ -10,7 +10,7 @@ const Feed = ({ items, likePost, unlikePost }) => {
     const handleLikePost = post => e => {
         e.preventDefault();
 
-        if (post.hasUserLiked) {
+        if (post.hasLiked) {
             unlikePost(post.id);
         } else {
             likePost(post.id);
@@ -74,7 +74,7 @@ Feed.propTypes = {
             posted: PropTypes.string.isRequired,
             username: PropTypes.string.isRequired,
             likes: PropTypes.number.isRequired,
-            hasUserLiked: PropTypes.bool.isRequired,
+            hasLiked: PropTypes.bool.isRequired,
         }).isRequired
     ),
     likePost: PropTypes.func.isRequired,

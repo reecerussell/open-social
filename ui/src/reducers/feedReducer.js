@@ -9,10 +9,10 @@ const updateLikedStatus = (feedItems, id, liked) => {
         console.log(id, feedItem);
         if (feedItem.id === id) {
             if (liked) {
-                feedItem.hasUserLiked = true;
+                feedItem.hasLiked = true;
                 feedItem.likes += 1;
             } else {
-                feedItem.hasUserLiked = false;
+                feedItem.hasLiked = false;
                 feedItem.likes -= 1;
             }
         }

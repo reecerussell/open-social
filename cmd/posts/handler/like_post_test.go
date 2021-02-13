@@ -26,8 +26,8 @@ func TestLikePostHandler(t *testing.T) {
 	testPostReferenceID := "5234934"
 	testUserReferenceID := "1740398"
 	testPost := model.PostFromDao(&dao.Post{
-		ID:           testPostID,
-		HasUserLiked: false,
+		ID:       testPostID,
+		HasLiked: false,
 	})
 
 	mockRepo := mock.NewMockPostRepository(ctrl)
@@ -82,7 +82,7 @@ func TestLikePostHandler_WhereUserHasAlreadyLikedPost_ReturnsBadRequest(t *testi
 	testPostReferenceID := "5234934"
 	testUserReferenceID := "1740398"
 	testPost := model.PostFromDao(&dao.Post{
-		HasUserLiked: true,
+		HasLiked: true,
 	})
 
 	mockRepo := mock.NewMockPostRepository(ctrl)
@@ -108,8 +108,8 @@ func TestLikePostHandler_CreateLikeFails_ReturnsInternalServerError(t *testing.T
 	testUserReferenceID := "1740398"
 	testError := errors.New("an error occured")
 	testPost := model.PostFromDao(&dao.Post{
-		ID:           testPostID,
-		HasUserLiked: false,
+		ID:       testPostID,
+		HasLiked: false,
 	})
 
 	mockRepo := mock.NewMockPostRepository(ctrl)

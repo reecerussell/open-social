@@ -26,7 +26,7 @@ func TestPostProvider_Get_ReturnsPostSuccessfully(t *testing.T) {
 	testUsername := "test"
 	testCaption := "Hello World"
 	testLikes := 12
-	testHasUserLiked := true
+	testHasLiked := true
 	testCtx := context.Background()
 
 	mockRow := mock.NewMockRow(ctrl)
@@ -37,7 +37,7 @@ func TestPostProvider_Get_ReturnsPostSuccessfully(t *testing.T) {
 		*(dest[3].(*string)) = testUsername
 		*(dest[4].(*string)) = testCaption
 		*(dest[5].(*int)) = testLikes
-		*(dest[6].(*bool)) = testHasUserLiked
+		*(dest[6].(*bool)) = testHasLiked
 
 		return nil
 	})
@@ -54,7 +54,7 @@ func TestPostProvider_Get_ReturnsPostSuccessfully(t *testing.T) {
 	assert.Equal(t, testUsername, post.Username)
 	assert.Equal(t, testCaption, post.Caption)
 	assert.Equal(t, testLikes, post.Likes)
-	assert.Equal(t, testHasUserLiked, post.HasLiked)
+	assert.Equal(t, testHasLiked, post.HasLiked)
 }
 
 // post not found
@@ -129,7 +129,7 @@ func TestPostProvider_GetProfileFeed_ReturnsProfileFeed(t *testing.T) {
 	testPosted := time.Now().UTC()
 	testUsername := "test"
 	testLikes := 12
-	testHasUserLiked := true
+	testHasLiked := true
 	testIsAuthor := false
 	testCtx := context.Background()
 
@@ -151,7 +151,7 @@ func TestPostProvider_GetProfileFeed_ReturnsProfileFeed(t *testing.T) {
 		*(dest[3].(*time.Time)) = testPosted
 		*(dest[4].(*string)) = testUsername
 		*(dest[5].(*int)) = testLikes
-		*(dest[6].(*bool)) = testHasUserLiked
+		*(dest[6].(*bool)) = testHasLiked
 		*(dest[7].(*bool)) = testIsAuthor
 
 		return nil
@@ -172,7 +172,7 @@ func TestPostProvider_GetProfileFeed_ReturnsProfileFeed(t *testing.T) {
 	assert.Equal(t, testPosted, feedItems[0].Posted)
 	assert.Equal(t, testUsername, feedItems[0].Username)
 	assert.Equal(t, testLikes, feedItems[0].Likes)
-	assert.Equal(t, testHasUserLiked, feedItems[0].HasUserLiked)
+	assert.Equal(t, testHasLiked, feedItems[0].HasLiked)
 	assert.Equal(t, testIsAuthor, feedItems[0].IsAuthor)
 }
 

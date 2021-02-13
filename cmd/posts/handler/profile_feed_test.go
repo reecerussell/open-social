@@ -29,13 +29,13 @@ func TestProfileFeedHandler(t *testing.T) {
 	mockProvider := mock.NewMockPostProvider(ctrl)
 	mockProvider.EXPECT().GetProfileFeed(gomock.Any(), testUsername, testUserReferenceID).Return([]*dto.FeedItem{
 		{
-			ID:           "23123",
-			Caption:      "Hello World",
-			Posted:       testPostedDate,
-			Username:     testUsername,
-			Likes:        1,
-			HasUserLiked: false,
-			IsAuthor:     true,
+			ID:       "23123",
+			Caption:  "Hello World",
+			Posted:   testPostedDate,
+			Username: testUsername,
+			Likes:    1,
+			HasLiked: false,
+			IsAuthor: true,
 		},
 	}, nil)
 
@@ -66,7 +66,7 @@ func TestProfileFeedHandler(t *testing.T) {
 	assert.Equal(t, string(expPostedDate), item["posted"])
 	assert.Equal(t, testUsername, item["username"])
 	assert.Equal(t, float64(1), item["likes"])
-	assert.Equal(t, false, item["hasUserLiked"])
+	assert.Equal(t, false, item["hasLiked"])
 	assert.Equal(t, true, item["isAuthor"])
 }
 

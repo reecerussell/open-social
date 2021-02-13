@@ -10,7 +10,7 @@ const Feed = ({ items, error, loading, fetchFeed }) => {
         fetchFeed();
     }, [fetchFeed]);
 
-    return <Shared.Feed items={items} />
+    return <Shared.Feed items={items} />;
 };
 
 Feed.propTypes = {
@@ -21,7 +21,7 @@ Feed.propTypes = {
             posted: PropTypes.string.isRequired,
             username: PropTypes.string.isRequired,
             likes: PropTypes.number.isRequired,
-            hasUserLiked: PropTypes.bool.isRequired,
+            hasLiked: PropTypes.bool.isRequired,
         }).isRequired
     ),
     error: PropTypes.string,
