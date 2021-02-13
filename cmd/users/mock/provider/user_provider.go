@@ -48,3 +48,18 @@ func (mr *MockUserProviderMockRecorder) GetProfile(ctx, username, userReferenceI
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfile", reflect.TypeOf((*MockUserProvider)(nil).GetProfile), ctx, username, userReferenceID)
 }
+
+// GetInfo mocks base method.
+func (m *MockUserProvider) GetInfo(ctx context.Context, userReferenceID string) (*dto.Info, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInfo", ctx, userReferenceID)
+	ret0, _ := ret[0].(*dto.Info)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInfo indicates an expected call of GetInfo.
+func (mr *MockUserProviderMockRecorder) GetInfo(ctx, userReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInfo", reflect.TypeOf((*MockUserProvider)(nil).GetInfo), ctx, userReferenceID)
+}

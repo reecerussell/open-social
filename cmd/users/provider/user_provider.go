@@ -17,6 +17,7 @@ var (
 // UserProvider is used to query user data, for read-only operations.
 type UserProvider interface {
 	GetProfile(ctx context.Context, username, userReferenceID string) (*dto.Profile, error)
+	GetInfo(ctx context.Context, userReferenceID string) (*dto.Info, error)
 }
 
 type userProvider struct {
@@ -76,4 +77,37 @@ func (p *userProvider) GetProfile(ctx context.Context, username, userReferenceID
 	}
 
 	return &profile, nil
+}
+
+func (p *userProvider) GetInfo(ctx context.Context, userReferenceID string) (*dto.Info, error) {
+	const query = `SELECT 
+		CAST([U].[ReferenceId] AS CHAR(36)) AS [Id],
+		[U].[Username] AS [Username],
+		CAST([M].[ReferenceId] AS CHAR(36)) AS [MediaId],
+		(SELECT COUNT([UserId]) FROM [UserFollowers] WHERE [UserId] = [U].[Id]) AS [FollowerCount]
+	FROM [Users] AS [U]
+	LEFT JOIN [Media] AS [M] ON [M].[Id] = [U].[MediaId]
+	WHERE [U].[ReferenceId] = @userReferenceId;`
+
+	row, err := p.db.Single(ctx, query, sql.Named("userReferenceId", userReferenceID))
+	if err != nil {
+		return nil, err
+	}
+
+	var info dto.Info
+	err = row.Scan(
+		&info.ID,
+		&info.Username,
+		&info.MediaID,
+		&info.FollowerCount,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = ErrProfileNotFound
+		}
+
+		return nil, err
+	}
+
+	return &info, nil
 }
