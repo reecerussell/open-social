@@ -6,4 +6,8 @@ type User struct {
 	ReferenceID  string
 	Username     string
 	PasswordHash string
+
+	// IsFollowing indicates wether the requesting user
+	// is following this user or not.
+	IsFollowing bool
 }

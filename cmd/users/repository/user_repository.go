@@ -20,6 +20,10 @@ type UserRepository interface {
 	Create(ctx context.Context, u *model.User) error
 	DoesUsernameExist(ctx context.Context, username string, excludeRefID *string) (bool, error)
 	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
+
+	// GetUserByReference gets a user's model by referenceID,
+	// for the user with the reference userReferenceID.
+	GetUserByReference(ctx context.Context, referenceID, userReferenceID string) (*model.User, error)
 	GetIDByReference(ctx context.Context, referenceID string) (*int, error)
 }
 
@@ -154,4 +158,51 @@ func (r *userRepository) GetIDByReference(ctx context.Context, referenceID strin
 	}
 
 	return &id, nil
+}
+
+func (r *userRepository) GetUserByReference(ctx context.Context, referenceID, userReferenceID string) (*model.User, error) {
+	db, err := sql.Open("sqlserver", r.url)
+	if err != nil {
+		return nil, err
+	}
+
+	const query = `SELECT
+		[Id],
+		CAST([ReferenceId] AS CHAR(36)),
+		[Username],
+		[PasswordHash],
+		CASE (SELECT COUNT([UserId]) FROM [UserFollowers] AS [UF]
+				INNER JOIN [Users] AS [U] ON [U].[Id] = [UF].[FollowerId]
+				WHERE [UF].[UserId] = 8 AND [U].[ReferenceId] = @userReferenceId)
+			WHEN 1 THEN CAST(1 AS BIT)
+			ELSE CAST(0 AS BIT)
+		END AS [IsFollowing]
+		FROM [Users]
+		WHERE [ReferenceId] = @referenceId;`
+
+	stmt, err := db.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var user dao.User
+	err = stmt.QueryRowContext(ctx,
+		sql.Named("referenceId", referenceID),
+		sql.Named("userReferenceId", userReferenceID)).Scan(
+		&user.ID,
+		&user.ReferenceID,
+		&user.Username,
+		&user.PasswordHash,
+		&user.IsFollowing,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrUserNotFound
+		}
+
+		return nil, err
+	}
+
+	return model.NewUserFromDao(&user), nil
 }
