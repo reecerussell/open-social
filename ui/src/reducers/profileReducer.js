@@ -92,6 +92,48 @@ const profileReducer = (state = initialState.profile, action) => {
                 error: action.error,
                 loading: false,
             };
+        case profileTypes.FOLLOW_PROFILE:
+            return {
+                ...state,
+                loading: true,
+            };
+        case profileTypes.FOLLOW_PROFILE_SUCCESS:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    isFollowing: true,
+                },
+                loading: false,
+                error: null,
+            };
+        case profileTypes.FOLLOW_PROFILE_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
+        case profileTypes.UNFOLLOW_PROFILE:
+            return {
+                ...state,
+                loading: true,
+            };
+        case profileTypes.UNFOLLOW_PROFILE_SUCCESS:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    isFollowing: false,
+                },
+                loading: false,
+                error: null,
+            };
+        case profileTypes.UNFOLLOW_PROFILE_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading: false,
+            };
         default:
             return state;
     }

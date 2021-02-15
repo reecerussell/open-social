@@ -11,6 +11,7 @@ const initialState = {
     },
     profile: {
         data: {
+            userId: "",
             username: "",
             mediaId: null,
             bio: null,

@@ -233,3 +233,73 @@ func TestGetInfo_RequestFails_ReturnsError(t *testing.T) {
 	assert.Nil(t, info)
 	assert.Equal(t, testError, err)
 }
+
+func TestFollow_GivenValidData_ReturnsInfo(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testUserReferenceID := "304324"
+	testFollowerReferenceID := "302470"
+
+	expectedURL := fmt.Sprintf("/follow/%s/%s", testUserReferenceID, testFollowerReferenceID)
+	mockHTTP := mock.NewMockHTTP(ctrl)
+	mockHTTP.EXPECT().Post(expectedURL, nil, nil).Return(nil)
+
+	c := &usersClient{base: mockHTTP}
+
+	err := c.Follow(testUserReferenceID, testFollowerReferenceID)
+	assert.NoError(t, err)
+}
+
+func TestFollow_RequestFails_ReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testUserReferenceID := "304324"
+	testFollowerReferenceID := "302470"
+	testError := errors.New("an error occured")
+
+	expectedURL := fmt.Sprintf("/follow/%s/%s", testUserReferenceID, testFollowerReferenceID)
+	mockHTTP := mock.NewMockHTTP(ctrl)
+	mockHTTP.EXPECT().Post(expectedURL, nil, nil).Return(testError)
+
+	c := &usersClient{base: mockHTTP}
+
+	err := c.Follow(testUserReferenceID, testFollowerReferenceID)
+	assert.Equal(t, testError, err)
+}
+
+func TestUnfollow_GivenValidData_ReturnsInfo(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testUserReferenceID := "304324"
+	testFollowerReferenceID := "302470"
+
+	expectedURL := fmt.Sprintf("/unfollow/%s/%s", testUserReferenceID, testFollowerReferenceID)
+	mockHTTP := mock.NewMockHTTP(ctrl)
+	mockHTTP.EXPECT().Post(expectedURL, nil, nil).Return(nil)
+
+	c := &usersClient{base: mockHTTP}
+
+	err := c.Unfollow(testUserReferenceID, testFollowerReferenceID)
+	assert.NoError(t, err)
+}
+
+func TestUnfollow_RequestFails_ReturnsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testUserReferenceID := "304324"
+	testFollowerReferenceID := "302470"
+	testError := errors.New("an error occured")
+
+	expectedURL := fmt.Sprintf("/unfollow/%s/%s", testUserReferenceID, testFollowerReferenceID)
+	mockHTTP := mock.NewMockHTTP(ctrl)
+	mockHTTP.EXPECT().Post(expectedURL, nil, nil).Return(testError)
+
+	c := &usersClient{base: mockHTTP}
+
+	err := c.Unfollow(testUserReferenceID, testFollowerReferenceID)
+	assert.Equal(t, testError, err)
+}

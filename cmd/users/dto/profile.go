@@ -2,6 +2,7 @@ package dto
 
 // Profile contains the data returns from getting a user's profile.
 type Profile struct {
+	UserID        string  `json:"userId"`
 	Username      string  `json:"username"`
 	MediaID       *string `json:"mediaId"`
 	Bio           *string `json:"bio"`

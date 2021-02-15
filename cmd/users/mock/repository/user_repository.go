@@ -78,6 +78,21 @@ func (mr *MockUserRepositoryMockRecorder) GetUserByUsername(ctx, username interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockUserRepository)(nil).GetUserByUsername), ctx, username)
 }
 
+// GetUserByReference mocks base method.
+func (m *MockUserRepository) GetUserByReference(ctx context.Context, referenceID, userReferenceID string) (*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserByReference", ctx, referenceID, userReferenceID)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserByReference indicates an expected call of GetUserByReference.
+func (mr *MockUserRepositoryMockRecorder) GetUserByReference(ctx, referenceID, userReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByReference", reflect.TypeOf((*MockUserRepository)(nil).GetUserByReference), ctx, referenceID, userReferenceID)
+}
+
 // GetIDByReference mocks base method.
 func (m *MockUserRepository) GetIDByReference(ctx context.Context, referenceID string) (*int, error) {
 	m.ctrl.T.Helper()

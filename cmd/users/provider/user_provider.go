@@ -36,7 +36,8 @@ func (p *userProvider) GetProfile(ctx context.Context, username, userReferenceID
 		WHERE [U].[Username] = @username
 	)
 	
-	SELECT 
+	SELECT
+		CAST([U].[ReferenceId] AS CHAR(36)) AS [UserId],
 		[U].[Username],
 		CAST([M].[ReferenceId] AS CHAR(36)) AS [MediaId],
 		[U].[Bio],
@@ -60,6 +61,7 @@ func (p *userProvider) GetProfile(ctx context.Context, username, userReferenceID
 
 	var profile dto.Profile
 	err = row.Scan(
+		&profile.UserID,
 		&profile.Username,
 		&profile.MediaID,
 		&profile.Bio,

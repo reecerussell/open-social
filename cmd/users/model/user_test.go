@@ -178,6 +178,7 @@ func TestNewUserFromDao(t *testing.T) {
 		testReferenceID  = "kho3hewq"
 		testUsername     = "testing"
 		testPasswordHash = "UGFzc3dvcmQxMjM="
+		testIsFollowing  = true
 	)
 
 	d := &dao.User{
@@ -185,6 +186,7 @@ func TestNewUserFromDao(t *testing.T) {
 		ReferenceID:  testReferenceID,
 		Username:     testUsername,
 		PasswordHash: testPasswordHash,
+		IsFollowing:  testIsFollowing,
 	}
 
 	user := NewUserFromDao(d)
@@ -192,6 +194,7 @@ func TestNewUserFromDao(t *testing.T) {
 	assert.Equal(t, testReferenceID, user.referenceID)
 	assert.Equal(t, testUsername, user.username)
 	assert.Equal(t, testPasswordHash, user.passwordHash)
+	assert.Equal(t, testIsFollowing, user.isFollowing)
 }
 
 func TestUser_Dao(t *testing.T) {
@@ -234,6 +237,15 @@ func TestUser_ReferenceID(t *testing.T) {
 	assert.Equal(t, testReferenceID, refID)
 }
 
+func TestUser_ID(t *testing.T) {
+	const testID = 1232
+
+	user := &User{id: testID}
+	id := user.ID()
+
+	assert.Equal(t, testID, id)
+}
+
 func TestUser_SetID(t *testing.T) {
 	const testID = 1
 
@@ -250,4 +262,32 @@ func TestUser_SetReferenceID(t *testing.T) {
 	user.SetReferenceID(testReferenceID)
 
 	assert.Equal(t, testReferenceID, user.referenceID)
+}
+
+func TestUser_CanFollow(t *testing.T) {
+	user := User{isFollowing: false}
+	err := user.CanFollow()
+	assert.NoError(t, err)
+}
+
+func TestUser_CanFollow_ReturnsError(t *testing.T) {
+	t.Run("User Already Follows", func(t *testing.T) {
+		user := User{isFollowing: true}
+		err := user.CanFollow()
+		assert.Equal(t, "user is already following this user", err.Error())
+	})
+}
+
+func TestUser_CanUnfollow(t *testing.T) {
+	user := User{isFollowing: true}
+	err := user.CanUnfollow()
+	assert.NoError(t, err)
+}
+
+func TestUser_CanUnfollow_ReturnsError(t *testing.T) {
+	t.Run("User Already Follows", func(t *testing.T) {
+		user := User{isFollowing: false}
+		err := user.CanUnfollow()
+		assert.Equal(t, "user is not following this user", err.Error())
+	})
 }

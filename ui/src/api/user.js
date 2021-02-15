@@ -1,4 +1,4 @@
-import { get } from "../utils/api";
+import { get, post } from "../utils/api";
 import { profileActions, userActions } from "../actions";
 
 const fetchProfile = username => dispatch => {
@@ -31,4 +31,36 @@ const fetchInfo = () => dispatch => {
         .catch(err => dispatch(userActions.loadInfoError(err.toString())));
 };
 
-export { fetchProfile, fetchInfo };
+const submitFollow = userId => dispatch => {
+    dispatch(profileActions.followProfile(userId));
+
+    return post("users/follow/" + userId)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.error);
+            }
+
+            dispatch(profileActions.followProfileSuccess(userId));
+        })
+        .catch(err =>
+            dispatch(profileActions.followProfileError(err.toString()))
+        );
+};
+
+const submitUnfollow = userId => dispatch => {
+    dispatch(profileActions.unfollowProfile(userId));
+
+    return post("users/unfollow/" + userId)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.error);
+            }
+
+            dispatch(profileActions.unfollowProfileSuccess(userId));
+        })
+        .catch(err =>
+            dispatch(profileActions.unfollowProfileError(err.toString()))
+        );
+};
+
+export { fetchProfile, fetchInfo, submitFollow, submitUnfollow };

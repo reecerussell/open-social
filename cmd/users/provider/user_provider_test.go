@@ -23,13 +23,14 @@ func TestUserProvider_GetProfile_ReturnsProfileSuccessfully(t *testing.T) {
 	mockRow := mock.NewMockRow(ctrl)
 	mockRow.EXPECT().Scan(gomock.Any()).
 		DoAndReturn(func(dest ...interface{}) error {
-			*(dest[0].(*string)) = "test"
-			*(dest[1].(**string)) = nil
+			*(dest[0].(*string)) = "32074"
+			*(dest[1].(*string)) = "test"
 			*(dest[2].(**string)) = nil
-			*(dest[3].(*int)) = 10
-			*(dest[4].(*bool)) = true
-			*(dest[5].(*bool)) = false
-			*(dest[6].(*int)) = 5
+			*(dest[3].(**string)) = nil
+			*(dest[4].(*int)) = 10
+			*(dest[5].(*bool)) = true
+			*(dest[6].(*bool)) = false
+			*(dest[7].(*int)) = 5
 
 			return nil
 		})
@@ -41,6 +42,7 @@ func TestUserProvider_GetProfile_ReturnsProfileSuccessfully(t *testing.T) {
 	profile, err := provider.GetProfile(testCtx, testUsername, testUserReferenceID)
 	assert.NoError(t, err)
 
+	assert.Equal(t, "32074", profile.UserID)
 	assert.Equal(t, testUsername, profile.Username)
 	assert.Nil(t, profile.MediaID)
 	assert.Nil(t, profile.Bio)

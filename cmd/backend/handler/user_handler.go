@@ -150,3 +150,49 @@ func (h *UserHandler) GetInfo(w http.ResponseWriter, r *http.Request) {
 
 	h.Respond(w, info)
 }
+
+// Follow handles requests to make the current user follow the user with the given id.
+func (h *UserHandler) Follow(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userReferenceID := params["userReferenceID"]
+
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	err := h.client.Follow(userReferenceID, userID)
+	if err != nil {
+		switch e := err.(type) {
+		case *client.Error:
+			h.RespondError(w, e, e.StatusCode)
+			return
+		default:
+			h.RespondError(w, err, http.StatusInternalServerError)
+			return
+		}
+	}
+
+	h.Respond(w, nil)
+}
+
+// Unfollow handles requests to make the current user unfollow the user with the given id.
+func (h *UserHandler) Unfollow(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userReferenceID := params["userReferenceID"]
+
+	ctx := r.Context()
+	userID := ctx.Value(core.ContextKey("uid")).(string)
+
+	err := h.client.Unfollow(userReferenceID, userID)
+	if err != nil {
+		switch e := err.(type) {
+		case *client.Error:
+			h.RespondError(w, e, e.StatusCode)
+			return
+		default:
+			h.RespondError(w, err, http.StatusInternalServerError)
+			return
+		}
+	}
+
+	h.Respond(w, nil)
+}

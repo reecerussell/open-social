@@ -32,6 +32,8 @@ func main() {
 	getIDByReference := ctn.GetService("GetIDByReferenceHandler").(*handler.GetIDByReferenceHandler)
 	getProfile := ctn.GetService("GetProfileHandler").(*handler.GetProfileHandler)
 	getInfo := ctn.GetService("GetInfoHandler").(*handler.GetInfoHandler)
+	followUser := ctn.GetService("FollowUserHandler").(*handler.FollowUserHandler)
+	unfollowUser := ctn.GetService("UnfollowUserHandler").(*handler.UnfollowUserHandler)
 
 	app := core.NewApp()
 	app.AddHealthCheck(database.NewHealthCheck(db))
@@ -42,6 +44,8 @@ func main() {
 	app.Post("/claims", getClaims)
 	app.Get("/profile/{username}/{userReferenceID}", getProfile)
 	app.Get("/info/{userReferenceID}", getInfo)
+	app.Post("/follow/{userReferenceId}/{followerReferenceId}", followUser)
+	app.Post("/unfollow/{userReferenceId}/{followerReferenceId}", unfollowUser)
 
 	go app.Serve()
 
@@ -112,6 +116,11 @@ func buildServices(cnf *Config) *core.Container {
 		return repository.NewUserRepository(url)
 	})
 
+	ctn.AddService("FollowerRepository", func(ctn *core.Container) interface{} {
+		db := ctn.GetService("Database").(database.Database)
+		return repository.NewFollowerRepository(db)
+	})
+
 	ctn.AddService("UserProvider", func(ctn *core.Container) interface{} {
 		db := ctn.GetService("Database").(database.Database)
 		return provider.NewUserProvider(db)
@@ -148,6 +157,20 @@ func buildServices(cnf *Config) *core.Container {
 		provider := ctn.GetService("UserProvider").(provider.UserProvider)
 
 		return handler.NewGetInfoHandler(provider)
+	})
+
+	ctn.AddService("FollowUserHandler", func(ctn *core.Container) interface{} {
+		repo := ctn.GetService("UserRepository").(repository.UserRepository)
+		followers := ctn.GetService("FollowerRepository").(repository.FollowerRepository)
+
+		return handler.NewFollowUserHandler(repo, followers)
+	})
+
+	ctn.AddService("UnfollowUserHandler", func(ctn *core.Container) interface{} {
+		repo := ctn.GetService("UserRepository").(repository.UserRepository)
+		followers := ctn.GetService("FollowerRepository").(repository.FollowerRepository)
+
+		return handler.NewUnfollowUserHandler(repo, followers)
 	})
 
 	return ctn

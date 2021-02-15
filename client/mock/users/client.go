@@ -107,3 +107,31 @@ func (mr *MockClientMockRecorder) GetInfo(userReferenceID interface{}) *gomock.C
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInfo", reflect.TypeOf((*MockClient)(nil).GetInfo), userReferenceID)
 }
+
+// Follow mocks base method.
+func (m *MockClient) Follow(userReferenceID, followerReferenceID string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Follow", userReferenceID, followerReferenceID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Follow indicates an expected call of Follow.
+func (mr *MockClientMockRecorder) Follow(userReferenceID, followerReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Follow", reflect.TypeOf((*MockClient)(nil).Follow), userReferenceID, followerReferenceID)
+}
+
+// Unfollow mocks base method.
+func (m *MockClient) Unfollow(userReferenceID, followerReferenceID string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Unfollow", userReferenceID, followerReferenceID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Unfollow indicates an expected call of Unfollow.
+func (mr *MockClientMockRecorder) Unfollow(userReferenceID, followerReferenceID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unfollow", reflect.TypeOf((*MockClient)(nil).Unfollow), userReferenceID, followerReferenceID)
+}

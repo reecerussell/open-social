@@ -30,6 +30,8 @@ type User struct {
 	referenceID  string
 	username     string
 	passwordHash string
+
+	isFollowing bool
 }
 
 // NewUser constructs a new user domain model.
@@ -59,7 +61,13 @@ func NewUserFromDao(user *dao.User) *User {
 		referenceID:  user.ReferenceID,
 		username:     user.Username,
 		passwordHash: user.PasswordHash,
+		isFollowing:  user.IsFollowing,
 	}
+}
+
+// ID returns the user's id.
+func (u *User) ID() int {
+	return u.id
 }
 
 // ReferenceID returns the user's reference id.
@@ -144,4 +152,24 @@ func (u *User) SetID(id int) {
 // be used in the repository when creating a user.
 func (u *User) SetReferenceID(referenceID string) {
 	u.referenceID = referenceID
+}
+
+// CanFollow is used to determine wether a user can follow this user or not.
+// An error is returned if the user cannot follow.
+func (u *User) CanFollow() error {
+	if u.isFollowing {
+		return errors.New("user is already following this user")
+	}
+
+	return nil
+}
+
+// CanUnfollow is used to determine wether a user can unfollow this user or not.
+// An error is returned if the user cannot unfollow.
+func (u *User) CanUnfollow() error {
+	if !u.isFollowing {
+		return errors.New("user is not following this user")
+	}
+
+	return nil
 }
