@@ -13,6 +13,8 @@ type Client interface {
 	GetIDByReference(referenceID string) (*int, error)
 	GetProfile(username, userReferenceID string) (*Profile, error)
 	GetInfo(userReferenceID string) (*Info, error)
+	Follow(userReferenceID, followerReferenceID string) error
+	Unfollow(userReferenceID, followerReferenceID string) error
 }
 
 // New returns a new instance of Client.
@@ -76,4 +78,24 @@ func (c *usersClient) GetInfo(userReferenceID string) (*Info, error) {
 	}
 
 	return &info, nil
+}
+
+func (c *usersClient) Follow(userReferenceID, followerReferenceID string) error {
+	url := fmt.Sprintf("/follow/%s/%s", userReferenceID, followerReferenceID)
+	err := c.base.Post(url, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *usersClient) Unfollow(userReferenceID, followerReferenceID string) error {
+	url := fmt.Sprintf("/unfollow/%s/%s", userReferenceID, followerReferenceID)
+	err := c.base.Post(url, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
