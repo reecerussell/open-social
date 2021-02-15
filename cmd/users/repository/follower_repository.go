@@ -46,7 +46,7 @@ func (r *followerRepository) Create(ctx context.Context, userID int, followerRef
 }
 
 func (r *followerRepository) Delete(ctx context.Context, userID int, followerReferenceID string) error {
-	const query = `DELETE [UF].* FROM [UserFollowers] AS [UF] 
+	const query = `DELETE [UF] FROM [UserFollowers] AS [UF] 
 		INNER JOIN [Users] AS [F] ON [F].[Id] = [UF].[FollowerId]
 		WHERE [UF].[UserId] = @userId AND [F].[ReferenceId] = @followerReferenceId;`
 

@@ -154,7 +154,7 @@ func (h *UserHandler) GetInfo(w http.ResponseWriter, r *http.Request) {
 // Follow handles requests to make the current user follow the user with the given id.
 func (h *UserHandler) Follow(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	userReferenceID := params["userReferenceId"]
+	userReferenceID := params["userReferenceID"]
 
 	ctx := r.Context()
 	userID := ctx.Value(core.ContextKey("uid")).(string)
@@ -177,7 +177,7 @@ func (h *UserHandler) Follow(w http.ResponseWriter, r *http.Request) {
 // Unfollow handles requests to make the current user unfollow the user with the given id.
 func (h *UserHandler) Unfollow(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	userReferenceID := params["userReferenceId"]
+	userReferenceID := params["userReferenceID"]
 
 	ctx := r.Context()
 	userID := ctx.Value(core.ContextKey("uid")).(string)

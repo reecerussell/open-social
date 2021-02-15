@@ -20,12 +20,33 @@ const ProfileImage = ({ id }) => {
     );
 };
 
-const Profile = ({ profile, error, loading, fetchProfile }) => {
+const Profile = ({
+    profile,
+    error,
+    loading,
+    fetchProfile,
+    followProfile,
+    unfollowProfile,
+}) => {
     const { username } = useParams();
 
     useEffect(() => {
         fetchProfile(username);
     }, [fetchProfile, username]);
+
+    const handleFollowChange = e => {
+        e.preventDefault();
+
+        if (loading) {
+            return;
+        }
+
+        if (profile.isFollowing) {
+            unfollowProfile(profile.userId);
+        } else {
+            followProfile(profile.userId);
+        }
+    };
 
     return (
         <>
@@ -61,25 +82,14 @@ const Profile = ({ profile, error, loading, fetchProfile }) => {
                                 </span>
                             )}
 
-                            {!profile.isOwner && profile.isFollowing && (
-                                <span className="ml-4">
-                                    <a
-                                        href="/"
-                                        className="text-secondary underline"
-                                    >
-                                        Unfollow
-                                    </a>
-                                </span>
-                            )}
-
-                            {!profile.isOwner && !profile.isFollowing && (
-                                <span className="ml-4">
-                                    <a
-                                        href="/"
-                                        className="text-secondary underline"
-                                    >
-                                        Follow
-                                    </a>
+                            {!profile.isOwner && (
+                                <span
+                                    className="ml-4 underline follow-link-btn"
+                                    onClick={handleFollowChange}
+                                >
+                                    {!profile.isFollowing
+                                        ? "Follow"
+                                        : "Unfollow"}
                                 </span>
                             )}
                         </p>
@@ -96,6 +106,7 @@ const Profile = ({ profile, error, loading, fetchProfile }) => {
 
 Profile.propTypes = {
     profile: PropTypes.shape({
+        userId: PropTypes.string.isRequired,
         username: PropTypes.string.isRequired,
         mediaId: PropTypes.string,
         bio: PropTypes.string,
@@ -114,10 +125,16 @@ Profile.propTypes = {
             })
         ),
     }).isRequired,
+    error: PropTypes.string,
+    loading: PropTypes.bool,
+    fetchProfile: PropTypes.func.isRequired,
+    followProfile: PropTypes.func.isRequired,
+    unfollowProfile: PropTypes.func.isRequired,
 };
 
 PropTypes.defaultProps = {
     profile: {
+        userId: "",
         username: "",
         mediaId: null,
         bio: null,
@@ -141,6 +158,8 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators(
         {
             fetchProfile: userApi.fetchProfile,
+            followProfile: userApi.submitFollow,
+            unfollowProfile: userApi.submitUnfollow,
         },
         dispatch
     );

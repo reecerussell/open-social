@@ -167,18 +167,18 @@ func (r *userRepository) GetUserByReference(ctx context.Context, referenceID, us
 	}
 
 	const query = `SELECT
-		[Id],
-		CAST([ReferenceId] AS CHAR(36)),
-		[Username],
-		[PasswordHash],
+		[U].[Id],
+		CAST([U].[ReferenceId] AS CHAR(36)),
+		[U].[Username],
+		[U].[PasswordHash],
 		CASE (SELECT COUNT([UserId]) FROM [UserFollowers] AS [UF]
-				INNER JOIN [Users] AS [U] ON [U].[Id] = [UF].[FollowerId]
-				WHERE [UF].[UserId] = 8 AND [U].[ReferenceId] = @userReferenceId)
+				INNER JOIN [Users] AS [F] ON [F].[Id] = [UF].[FollowerId]
+				WHERE [UF].[UserId] = [U].[Id] AND [F].[ReferenceId] = @userReferenceId)
 			WHEN 1 THEN CAST(1 AS BIT)
 			ELSE CAST(0 AS BIT)
 		END AS [IsFollowing]
-		FROM [Users]
-		WHERE [ReferenceId] = @referenceId;`
+		FROM [Users] AS [U]
+		WHERE [U].[ReferenceId] = @referenceId;`
 
 	stmt, err := db.PrepareContext(ctx, query)
 	if err != nil {
