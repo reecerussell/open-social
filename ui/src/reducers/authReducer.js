@@ -1,29 +1,30 @@
-import * as types from "../actions/userActionTypes";
+import { authTypes } from "../actions";
 import initialState from "../store/initialState";
 
-const userReducer = (state = initialState.user, action) => {
+const authReducer = (state = initialState.auth, action) => {
   switch (action.type) {
-    case types.LOAD_INFO:
+    case authTypes.REGISTER:
       return {
         ...state,
         loading: true,
       };
-    case types.LOAD_INFO_SUCCESS:
+    case authTypes.REGISTER_SUCCESS:
       return {
         ...state,
-        ...action.info,
         loading: false,
         error: null,
+        success: true,
       };
-    case types.LOAD_INFO_ERROR:
+    case authTypes.REGISTER_ERROR:
       return {
         ...state,
         loading: false,
         error: action.error,
+        success: false,
       };
     default:
       return state;
   }
 };
 
-export default userReducer;
+export default authReducer;
