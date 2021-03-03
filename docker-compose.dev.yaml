@@ -110,6 +110,13 @@ services:
         depends_on:
             - media
 
+    migrations:
+        image: reecerussell/migrations
+        environment:
+            CONNECTION_STRING: ${CONNECTION_STRING}
+        volumes:
+            - ./sql:/migrations
+
     ## KAFKA
 
     # zookeeper:

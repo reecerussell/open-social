@@ -1,0 +1,11 @@
+provider: mssql
+migrations:
+  - name: InitialCreation
+    up: initial_creation.up.sql
+    down: initial_creation.down.sql
+  - name: GetPostLikesFunction
+    up: get_post_likes_function.up.sql
+    down: get_post_likes_function.down.sql
+  - name: HasUserLikedPostFunction
+    up: has_user_liked_post_function.up.sql
+    down: has_user_liked_post_function.down.sql

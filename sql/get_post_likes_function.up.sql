@@ -8,4 +8,4 @@ BEGIN
 	WHERE [PostId] = @PostId
 
 	RETURN @count
-END
+END;
