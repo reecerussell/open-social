@@ -1,12 +1,10 @@
 CREATE OR ALTER FUNCTION [dbo].[HasUserLikedPost] (@PostId INT, @UserId INT)
 RETURNS BIT
 BEGIN
-	DECLARE @result BIT = 0
-
 	IF EXISTS(SELECT [PostId] FROM [PostLikes] WHERE [PostId] = @PostId AND [UserId] = @UserId)
 	BEGIN
-		SET @result = 1
+		RETURN CAST(1 AS BIT)
 	END
 
-	RETURN @result
+	RETURN CAST(0 AS BIT)
 END
