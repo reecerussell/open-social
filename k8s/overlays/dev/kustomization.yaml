@@ -1,6 +1,15 @@
 namespace: open-social-dev
 bases:
-    - ../../base
-    - ./config
+  - ../../base
+  - ./config
+  - ./secrets
 resources:
-    - namespace.yaml
+  - namespace.yaml
+vars:
+  - name: DOMAIN
+    objref:
+      apiVersion: kustomize.config.k8s.io/v1
+      kind: Values
+      name: config
+    fieldref:
+      fieldpath: spec.domain

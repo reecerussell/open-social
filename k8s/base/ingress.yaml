@@ -1,16 +1,34 @@
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
-    name: open-social
+  name: open-social
+  annotations:
+    nginx.ingress.kubernetes.io/client-max-body-size: 2m
+    nginx.ingress.kubernetes.io/proxy-body-size: 2m
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
 spec:
-    rules:
-        - host: $(DOMAIN)
-          http:
-              paths:
-                  - path: /api/?(.*)
-                    pathType: Prefix
-                    backend:
-                        service:
-                            name: backend
-                            port:
-                                number: 80
+  rules:
+    - host: $(DOMAIN)
+      http:
+        paths:
+          - path: /api/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80
+          - path: /media/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: media-download
+                port:
+                  number: 80
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: ui
+                port:
+                  number: 80

@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: backend
-    name: backend
-  name: backend
+    app: media
+    name: media
+  name: media
 spec:
   selector:
     matchLabels:
-      app: backend
+      app: media
   replicas: 1
   revisionHistoryLimit: 3
   template:
     metadata:
       labels:
-        app: backend
+        app: media
     spec:
       containers:
-        - image: "reecerussell/open-social-backend:latest"
-          name: backend
+        - image: "reecerussell/open-social-media:latest"
+          name: media
           resources:
             limits:
               cpu: "100m"
@@ -30,19 +30,21 @@ spec:
             - containerPort: 9292
               protocol: TCP
           env:
-            - name: USERS_API_URL
-              value: http://users
-            - name: AUTH_API_URL
-              value: http://auth
-            - name: POSTS_API_URL
-              value: http://posts
-            - name: MEDIA_API_URL
-              value: http://media
-            - name: TOKEN_PUBLIC_KEY_DATA
+            - name: GOOGLE_CREDENTIAL_JSON
               valueFrom:
                 secretKeyRef:
-                  name: token
-                  key: public-key
+                  name: media
+                  key: google-credential
+            - name: MEDIA_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: media
+                  key: bucket-name
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: connection-string
           livenessProbe:
             httpGet:
               path: /health

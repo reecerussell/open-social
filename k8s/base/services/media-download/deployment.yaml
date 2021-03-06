@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: backend
-    name: backend
-  name: backend
+    app: media-download
+    name: media-download
+  name: media-download
 spec:
   selector:
     matchLabels:
-      app: backend
+      app: media-download
   replicas: 1
   revisionHistoryLimit: 3
   template:
     metadata:
       labels:
-        app: backend
+        app: media-download
     spec:
       containers:
-        - image: "reecerussell/open-social-backend:latest"
-          name: backend
+        - image: "reecerussell/open-social-media-download"
+          name: media-download
           resources:
             limits:
               cpu: "100m"
@@ -30,19 +30,8 @@ spec:
             - containerPort: 9292
               protocol: TCP
           env:
-            - name: USERS_API_URL
-              value: http://users
-            - name: AUTH_API_URL
-              value: http://auth
-            - name: POSTS_API_URL
-              value: http://posts
             - name: MEDIA_API_URL
               value: http://media
-            - name: TOKEN_PUBLIC_KEY_DATA
-              valueFrom:
-                secretKeyRef:
-                  name: token
-                  key: public-key
           livenessProbe:
             httpGet:
               path: /health

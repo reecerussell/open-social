@@ -1,4 +1,5 @@
 bases:
-    - ./services
+  - ./services
+  - ./config
 resources:
-    - ingress.yaml
+  - ingress.yaml
