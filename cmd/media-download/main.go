@@ -22,6 +22,7 @@ func main() {
 	app := core.NewApp()
 	app.AddMiddleware(core.NewLoggingMiddleware())
 
+	app.Get(app.HealthPath, core.HealthCheckHandler(app.HealthChecks))
 	app.Get("/{referenceID}", downloadHandler)
 
 	go app.Serve()

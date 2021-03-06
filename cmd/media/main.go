@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/signal"
@@ -19,7 +20,8 @@ const (
 )
 
 func main() {
-	ctn := buildServices()
+	ctx, cancel := context.WithCancel(context.Background())
+	ctn := buildServices(ctx)
 	db := ctn.GetService("Database").(database.Database)
 
 	createMedia := ctn.GetService("CreateMediaHandler").(*handler.CreateMediaHandler)
@@ -38,10 +40,12 @@ func main() {
 	signal.Notify(stop, os.Interrupt, os.Kill)
 	<-stop
 
+	cancel()
+
 	log.Println("App stopped.")
 }
 
-func buildServices() *core.Container {
+func buildServices(ctx context.Context) *core.Container {
 	ctn := core.NewContainer()
 
 	ctn.AddSingleton("Database", func(ctn *core.Container) interface{} {
@@ -60,7 +64,11 @@ func buildServices() *core.Container {
 	})
 
 	ctn.AddService("MediaService", func(ctn *core.Container) interface{} {
-		uploader := gcp.New(os.Getenv(mediaBucketVar))
+		uploader, err := gcp.New(ctx, os.Getenv(mediaBucketVar))
+		if err != nil {
+			panic(err)
+		}
+
 		return uploader
 	})
 

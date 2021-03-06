@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-download
+spec:
+  selector:
+    app: media-download
+  ports:
+    - name: http
+      targetPort: 9292
+      port: 80

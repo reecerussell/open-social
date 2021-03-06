@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: media
+    name: media
+  name: media
+spec:
+  selector:
+    matchLabels:
+      app: media
+  replicas: 1
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: media
+    spec:
+      containers:
+        - image: "reecerussell/open-social-media:latest"
+          name: media
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "200Mi"
+            requests:
+              cpu: "20m"
+              memory: "50Mi"
+          ports:
+            - containerPort: 9292
+              protocol: TCP
+          env:
+            - name: GOOGLE_CREDENTIAL_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: media
+                  key: google-credential
+            - name: MEDIA_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: media
+                  key: bucket-name
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: connection-string
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9292
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9292
+            initialDelaySeconds: 3
+            periodSeconds: 3

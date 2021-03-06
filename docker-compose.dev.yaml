@@ -16,12 +16,21 @@ services:
         volumes:
             - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
         ports:
-            - 80:80
+            - 8080:80
         networks:
             - open-social
         depends_on:
             - backend
             - media-download
+            - ui
+
+    ui:
+        image: reecerussell/open-social-ui
+        build:
+            context: ui
+            dockerfile: Dockerfile
+        networks:
+            - open-social
 
     backend:
         image: reecerussell/open-social-backend

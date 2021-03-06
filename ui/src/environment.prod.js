@@ -1,5 +1,6 @@
 const env = {
-  apiUrl: "",
+  mediaUrl: "/media/",
+  apiUrl: "/api/",
 };
 
 export default env;

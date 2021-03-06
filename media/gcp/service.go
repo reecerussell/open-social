@@ -4,39 +4,54 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"cloud.google.com/go/storage"
+	"google.golang.org/api/option"
 
 	"github.com/reecerussell/open-social/media"
 )
+
+var credentialJSONVar = "GOOGLE_CREDENTIAL_JSON"
 
 // bucket is an implementation of media.Service for Google Cloud Platform's storage buckets.
 type bucket struct {
 	bucketName     string
 	timeoutSeconds int
+	client         *storage.Client
 }
 
 // New returns a new instance of media.Service for GCP storeage buckets.
-func New(bucketName string) media.Service {
+func New(ctx context.Context, bucketName string) (media.Service, error) {
+	var client *storage.Client
+	var err error
+
+	credJSON, ok := os.LookupEnv(credentialJSONVar)
+	if ok {
+		cred := option.WithCredentialsJSON([]byte(credJSON))
+		client, err = storage.NewClient(ctx, cred)
+	} else {
+		client, err = storage.NewClient(ctx)
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to init client: %v", err)
+	}
+
 	return &bucket{
 		bucketName:     bucketName,
 		timeoutSeconds: 30,
-	}
+		client:         client,
+	}, nil
 }
 
 func (b *bucket) Upload(ctx context.Context, key string, data []byte) error {
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to init client: %v", err)
-	}
-	defer client.Close()
-
 	ctx, cancel := context.WithTimeout(ctx, time.Second*time.Duration(b.timeoutSeconds))
 	defer cancel()
 
-	w := client.Bucket(b.bucketName).Object(key).NewWriter(ctx)
-	_, err = w.Write(data)
+	w := b.client.Bucket(b.bucketName).Object(key).NewWriter(ctx)
+	_, err := w.Write(data)
 	if err != nil {
 		return fmt.Errorf("failed to write: %v", err)
 	}
@@ -50,16 +65,10 @@ func (b *bucket) Upload(ctx context.Context, key string, data []byte) error {
 }
 
 func (b *bucket) Download(ctx context.Context, key string) ([]byte, error) {
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to init client: %v", err)
-	}
-	defer client.Close()
-
 	ctx, cancel := context.WithTimeout(ctx, time.Second*time.Duration(b.timeoutSeconds))
 	defer cancel()
 
-	r, err := client.Bucket(b.bucketName).Object(key).NewReader(ctx)
+	r, err := b.client.Bucket(b.bucketName).Object(key).NewReader(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("reader: %v", err)
 	}

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ui
+    name: ui
+  name: ui
+spec:
+  selector:
+    matchLabels:
+      app: ui
+  replicas: 1
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+        - image: "reecerussell/open-social-ui:latest"
+          name: ui
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "200Mi"
+            requests:
+              cpu: "20m"
+              memory: "50Mi"
+          ports:
+            - containerPort: 3000
+              protocol: TCP

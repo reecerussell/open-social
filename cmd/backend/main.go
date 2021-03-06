@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/reecerussell/gojwt"
 	"github.com/reecerussell/gojwt/rsa"
 
 	core "github.com/reecerussell/open-social"
@@ -18,12 +19,13 @@ import (
 )
 
 const (
-	usersAPIVar       = "USERS_API_URL"
-	authAPIVar        = "AUTH_API_URL"
-	postsAPIVar       = "POSTS_API_URL"
-	mediaAPIVar       = "MEDIA_API_URL"
-	tokenPublicKeyVar = "TOKEN_PUBLIC_KEY"
-	bucketName        = "MEDIA_BUCKET"
+	usersAPIVar           = "USERS_API_URL"
+	authAPIVar            = "AUTH_API_URL"
+	postsAPIVar           = "POSTS_API_URL"
+	mediaAPIVar           = "MEDIA_API_URL"
+	tokenPublicKeyVar     = "TOKEN_PUBLIC_KEY"
+	tokenPublicKeyDataVar = "TOKEN_PUBLIC_KEY_DATA"
+	bucketName            = "MEDIA_BUCKET"
 )
 
 func main() {
@@ -95,8 +97,22 @@ func buildServices() *core.Container {
 	})
 
 	ctn.AddService("AuthMiddleware", func(ctn *core.Container) interface{} {
-		path := os.Getenv(tokenPublicKeyVar)
-		alg, err := rsa.NewFromFile(path, crypto.SHA256)
+		var alg gojwt.Algorithm
+		var err error
+
+		if path, ok := os.LookupEnv(tokenPublicKeyVar); ok {
+			log.Printf("Using token public key file (%s)\n", path)
+			alg, err = rsa.NewFromFile(path, crypto.SHA256)
+		} else {
+			data, ok := os.LookupEnv(tokenPublicKeyDataVar)
+			if !ok {
+				panic("either a public key file path need to be given, or raw data")
+			}
+
+			log.Printf("Using token public key data (length: %d)\n", len(data))
+			alg, err = rsa.New([]byte(data), crypto.SHA256)
+		}
+
 		if err != nil {
 			panic(err)
 		}

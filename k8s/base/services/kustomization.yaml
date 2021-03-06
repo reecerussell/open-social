@@ -1,4 +1,8 @@
 bases:
-    - ./users
-    - ./backend
-    - ./posts
+  - ./users
+  - ./backend
+  - ./posts
+  - ./auth
+  - ./media
+  - ./media-download
+  - ./ui

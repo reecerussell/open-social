@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+    name: auth
+  name: auth
+spec:
+  selector:
+    matchLabels:
+      app: auth
+  replicas: 1
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - image: "reecerussell/open-social-auth:latest"
+          name: auth
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "200Mi"
+            requests:
+              cpu: "20m"
+              memory: "50Mi"
+          ports:
+            - containerPort: 9292
+              protocol: TCP
+          env:
+            - name: USERS_API_URL
+              value: http://users
+            - name: TOKEN_PRIVATE_KEY_DATA
+              valueFrom:
+                secretKeyRef:
+                  name: token
+                  key: private-key
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9292
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9292
+            initialDelaySeconds: 3
+            periodSeconds: 3

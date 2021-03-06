@@ -20,7 +20,7 @@ const DefaultPort = "8080"
 type App struct {
 	addr         string
 	middleware   []Middleware
-	healthChecks []HealthCheck
+	HealthChecks []HealthCheck
 	router       *mux.Router
 
 	HealthPath string
@@ -33,7 +33,7 @@ func NewApp() *App {
 	return &App{
 		addr:         fmt.Sprintf("0.0.0.0:%s", port),
 		router:       mux.NewRouter(),
-		healthChecks: []HealthCheck{},
+		HealthChecks: []HealthCheck{},
 		HealthPath:   "/health",
 	}
 }
@@ -45,7 +45,7 @@ func (app *App) AddMiddleware(middleware Middleware) {
 
 // AddHealthCheck adds a health check to the App.
 func (app *App) AddHealthCheck(healthCheck HealthCheck) {
-	app.healthChecks = append(app.healthChecks, healthCheck)
+	app.HealthChecks = append(app.HealthChecks, healthCheck)
 }
 
 func (app *App) Get(path string, h http.Handler) {
@@ -65,7 +65,7 @@ func (app *App) PostFunc(path string, h http.HandlerFunc) {
 }
 
 func (app *App) Serve() {
-	app.router.Handle(app.HealthPath, HealthCheckHandler(app.healthChecks))
+	app.router.Handle(app.HealthPath, HealthCheckHandler(app.HealthChecks))
 
 	s := http.Server{
 		Addr:    app.addr,
