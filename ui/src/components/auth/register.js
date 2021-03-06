@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { Redirect } from "react-router-dom";
 import { authApi } from "../../api";
 import { Textbox } from "../form";
 
@@ -34,6 +35,10 @@ const Register = ({ error, loading, success, submitRegistration }) => {
       password: formData.password,
     });
   };
+
+  if (success) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className="container sections">
