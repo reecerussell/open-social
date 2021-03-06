@@ -4,7 +4,7 @@ import { authActions } from "../actions";
 export const submitRegistration = data => dispatch => {
   dispatch(authActions.register());
 
-  return Api.post("users/register", data)
+  return Api.post("auth/register", data)
     .then(res => {
       if (!res.ok) {
         throw new Error(res.error);
