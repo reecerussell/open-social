@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/reecerussell/gojwt"
 	"github.com/reecerussell/gojwt/rsa"
 
 	core "github.com/reecerussell/open-social"
@@ -18,12 +19,13 @@ import (
 )
 
 const (
-	usersAPIVar       = "USERS_API_URL"
-	authAPIVar        = "AUTH_API_URL"
-	postsAPIVar       = "POSTS_API_URL"
-	mediaAPIVar       = "MEDIA_API_URL"
-	tokenPublicKeyVar = "TOKEN_PUBLIC_KEY"
-	bucketName        = "MEDIA_BUCKET"
+	usersAPIVar           = "USERS_API_URL"
+	authAPIVar            = "AUTH_API_URL"
+	postsAPIVar           = "POSTS_API_URL"
+	mediaAPIVar           = "MEDIA_API_URL"
+	tokenPublicKeyVar     = "TOKEN_PUBLIC_KEY"
+	tokenPublicKeyDataVar = "TOKEN_PUBLIC_KEY_DATA"
+	bucketName            = "MEDIA_BUCKET"
 )
 
 func main() {
@@ -95,8 +97,17 @@ func buildServices() *core.Container {
 	})
 
 	ctn.AddService("AuthMiddleware", func(ctn *core.Container) interface{} {
+		var alg gojwt.Algorithm
+		var err error
+
 		path := os.Getenv(tokenPublicKeyVar)
-		alg, err := rsa.NewFromFile(path, crypto.SHA256)
+		if path != "" {
+			alg, err = rsa.NewFromFile(path, crypto.SHA256)
+		} else {
+			data := os.Getenv(tokenPublicKeyDataVar)
+			alg, err = rsa.New([]byte(data), crypto.SHA256)
+		}
+
 		if err != nil {
 			panic(err)
 		}

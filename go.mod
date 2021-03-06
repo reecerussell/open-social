@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	9fans.net/go v0.0.2
-	cloud.google.com/go v0.75.0 // indirect
+	cloud.google.com/go v0.78.0 // indirect
 	cloud.google.com/go/storage v1.12.0
 	github.com/denisenkom/go-mssqldb v0.9.0
 	github.com/golang/mock v1.4.4
@@ -20,12 +20,12 @@ require (
 	go.opencensus.io v0.22.6 // indirect
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
 	golang.org/x/mod v0.4.1 // indirect
-	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
-	golang.org/x/oauth2 v0.0.0-20210126194326-f9ce19ea3013 // indirect
-	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
+	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
+	golang.org/x/oauth2 v0.0.0-20210220000619-9bb904979d93 // indirect
+	golang.org/x/sys v0.0.0-20210305230114-8fe3ee5dd75b // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.1.0 // indirect
-	google.golang.org/api v0.38.0
-	google.golang.org/genproto v0.0.0-20210126160654-44e461bb6506 // indirect
-	google.golang.org/grpc v1.35.0 // indirect
+	google.golang.org/api v0.40.0
+	google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb // indirect
+	google.golang.org/grpc v1.36.0 // indirect
 )

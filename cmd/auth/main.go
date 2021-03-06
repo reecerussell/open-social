@@ -17,9 +17,10 @@ import (
 )
 
 const (
-	usersAPIVar        = "USERS_API_URL"
-	configFileVar      = "CONFIG_FILE"
-	tokenPrivateKeyVar = "TOKEN_PRIVATE_KEY"
+	usersAPIVar            = "USERS_API_URL"
+	configFileVar          = "CONFIG_FILE"
+	tokenPrivateKeyVar     = "TOKEN_PRIVATE_KEY"
+	tokenPrivateKeyDataVar = "TOKEN_PRIVATE_KEY_DATA"
 )
 
 func main() {
@@ -78,7 +79,17 @@ func buildServices(cnf *Config) *core.Container {
 	})
 
 	ctn.AddService("TokenAlg", func(ctn *core.Container) interface{} {
-		alg, err := rsa.NewFromFile(os.Getenv(tokenPrivateKeyVar), crypto.SHA256)
+		var alg gojwt.Algorithm
+		var err error
+
+		path := os.Getenv(tokenPrivateKeyVar)
+		if path != "" {
+			alg, err = rsa.NewFromFile(tokenPrivateKeyVar, crypto.SHA256)
+		} else {
+			data := os.Getenv(tokenPrivateKeyDataVar)
+			alg, err = rsa.New([]byte(data), crypto.SHA256)
+		}
+
 		if err != nil {
 			panic(err)
 		}
