@@ -1,4 +1,5 @@
 const env = {
+  mediaUrl: "/media/",
   apiUrl: "/api/",
 };
 
