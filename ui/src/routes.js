@@ -2,7 +2,7 @@ import Feed from "./components/feed";
 import { Create, Post } from "./components/post";
 import { Layout } from "./components/layout";
 import Profile from "./components/profile";
-import { Register } from "./components/auth";
+import { Register, Login } from "./components/auth";
 
 const routes = [
   {
@@ -33,7 +33,13 @@ const routes = [
   },
   {
     path: "/register",
+    exact: true,
     component: Register,
+  },
+  {
+    path: "/login",
+    exact: true,
+    component: Login,
   },
 ];
 

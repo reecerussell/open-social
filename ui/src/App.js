@@ -16,7 +16,7 @@ import "./scss/styles.scss";
 
 const renderRoute = (route, props, userInfo) => {
   if (route.auth && !isAuthenticated()) {
-    return <Redirect to="/register" />;
+    return <Redirect to="/login" />;
   }
 
   const component = <route.component {...props} />;
