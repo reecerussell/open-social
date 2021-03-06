@@ -3,6 +3,7 @@ module github.com/reecerussell/open-social
 go 1.15
 
 require (
+	9fans.net/go v0.0.2
 	cloud.google.com/go v0.75.0 // indirect
 	cloud.google.com/go/storage v1.12.0
 	github.com/denisenkom/go-mssqldb v0.9.0

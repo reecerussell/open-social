@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -29,59 +28,6 @@ func NewUserHandler(client users.Client, auth auth.Client, posts posts.Client) *
 		auth:   auth,
 		posts:  posts,
 	}
-}
-
-// RegisterUserResponse is the response body of the register request.
-type RegisterUserResponse struct {
-	ReferenceID string             `json:"referenceId"`
-	Username    string             `json:"username"`
-	AccessToken *RegisterUserToken `json:"accessToken"`
-}
-
-// RegisterUserToken represents a user's access token in the register user response body.
-type RegisterUserToken struct {
-	Token   string `json:"token"`
-	Expires int64  `json:"expires"`
-}
-
-// Register handles requests to register a user.
-func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
-	var data users.CreateUserRequest
-	_ = json.NewDecoder(r.Body).Decode(&data)
-	defer r.Body.Close()
-
-	user, err := h.client.Create(&data)
-	if err != nil {
-		switch e := err.(type) {
-		case *client.Error:
-			h.RespondError(w, e, e.StatusCode)
-			return
-		default:
-			h.RespondError(w, err, http.StatusInternalServerError)
-			return
-		}
-	}
-
-	response := RegisterUserResponse{
-		ReferenceID: user.ReferenceID,
-		Username:    user.Username,
-	}
-
-	token, err := h.auth.GenerateToken(&auth.GenerateTokenRequest{
-		Username: user.Username,
-		Password: data.Password,
-	})
-	if err == nil {
-		response.AccessToken = &RegisterUserToken{
-			Token:   token.Token,
-			Expires: token.Expires,
-		}
-	} else {
-		log.Printf("WARN: failed to generate token: %v\n", err)
-	}
-
-	// TODO: redirect to authenticate and provide token for ui
-	h.Respond(w, response)
 }
 
 // GetProfileResponse returns a user's profile data.

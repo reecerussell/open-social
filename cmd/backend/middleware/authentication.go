@@ -10,7 +10,7 @@ import (
 	core "github.com/reecerussell/open-social"
 )
 
-var allowedPaths = []string{"/users/register"}
+var allowedPaths = []string{"/auth/register", "/auth/token"}
 
 // Authentication is middleware used to authenticate HTTP requests.
 type Authentication struct {
