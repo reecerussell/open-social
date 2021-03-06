@@ -10,8 +10,8 @@ export const submitRegistration = data => dispatch => {
         throw new Error(res.error);
       }
 
-      const { accessToken, expires } = res.data.token;
-      Auth.setAccessToken(accessToken, expires);
+      const { token, expires } = res.data.accessToken;
+      Auth.setAccessToken(token, expires);
 
       dispatch(authActions.registerSuccess());
     })
