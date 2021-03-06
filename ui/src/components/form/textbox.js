@@ -10,7 +10,8 @@ const Textbox = ({
   required,
   placeholder,
   max,
-  text,
+  type,
+  autoComplete,
 }) => {
   const isEmpty = !value;
   const classes = classNames("form-group", "sm-input", {
@@ -26,12 +27,13 @@ const Textbox = ({
         name={name}
         id={name}
         className="form-control"
-        type={text}
+        type={type}
         placeholder={placeholder}
         max={max}
         required={required}
         value={value}
         onChange={onChange}
+        autoComplete={autoComplete}
       />
     </div>
   );
@@ -46,6 +48,7 @@ Textbox.propTypes = {
   placeholder: PropTypes.string,
   max: PropTypes.string,
   type: PropTypes.string,
+  autoComplete: PropTypes.string,
 };
 
 Textbox.defaultProps = {
@@ -53,6 +56,7 @@ Textbox.defaultProps = {
   placeholder: null,
   max: null,
   type: "text",
+  autoComplete: "off",
 };
 
 export default Textbox;

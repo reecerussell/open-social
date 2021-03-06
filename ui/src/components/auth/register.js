@@ -64,6 +64,7 @@ const Register = ({ error, loading, success, submitRegistration }) => {
                 max="255"
                 onChange={handleUpdate}
                 value={formData.username}
+                autoComplete="username"
                 required
               />
               <Textbox
@@ -72,6 +73,8 @@ const Register = ({ error, loading, success, submitRegistration }) => {
                 placeholder="Enter a password"
                 onChange={handleUpdate}
                 value={formData.password}
+                type="password"
+                autoComplete="new-password"
                 required
               />
 
