@@ -1,5 +1,5 @@
 const env = {
-    apiUrl: "",
+  apiUrl: "",
 };
 
 export default env;

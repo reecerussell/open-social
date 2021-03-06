@@ -1,8 +1,8 @@
 .follow-link-btn {
-    @extend .text-secondary;
-    cursor: pointer;
+  @extend .text-secondary;
+  cursor: pointer;
 
-    &:hover {
-        text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
+  }
 }

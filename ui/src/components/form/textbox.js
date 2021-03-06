@@ -2,57 +2,61 @@ import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-const Textarea = ({
+const Textbox = ({
   label,
   value,
   onChange,
   name,
   required,
-  rows,
   placeholder,
   max,
+  type,
+  autoComplete,
 }) => {
   const isEmpty = !value;
-  const classes = classNames("form-control", {
+  const classes = classNames("form-group", "sm-input", {
     empty: isEmpty,
   });
 
   return (
-    <div className="form-group">
+    <div className={classes}>
       <label htmlFor={name} className="small">
         {label}
       </label>
-      <textarea
+      <input
         name={name}
         id={name}
-        className={classes}
-        rows={rows}
+        className="form-control"
+        type={type}
         placeholder={placeholder}
         max={max}
         required={required}
         value={value}
         onChange={onChange}
-      ></textarea>
+        autoComplete={autoComplete}
+      />
     </div>
   );
 };
 
-Textarea.propTypes = {
+Textbox.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   required: PropTypes.bool,
-  rows: PropTypes.string,
   placeholder: PropTypes.string,
   max: PropTypes.string,
+  type: PropTypes.string,
+  autoComplete: PropTypes.string,
 };
 
-Textarea.defaultProps = {
+Textbox.defaultProps = {
   required: false,
-  rows: "3",
   placeholder: null,
   max: null,
+  type: "text",
+  autoComplete: "off",
 };
 
-export default Textarea;
+export default Textbox;

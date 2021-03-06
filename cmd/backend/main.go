@@ -31,6 +31,7 @@ func main() {
 
 	userHandler := ctn.GetService("UserHandler").(*handler.UserHandler)
 	postHandler := ctn.GetService("PostHandler").(*handler.PostHandler)
+	authHandler := ctn.GetService("AuthHandler").(*handler.AuthHandler)
 	authMiddleware := ctn.GetService("AuthMiddleware").(*middleware.Authentication)
 
 	app := core.NewApp()
@@ -38,13 +39,21 @@ func main() {
 	app.AddMiddleware(middleware.NewCors())
 	app.AddMiddleware(authMiddleware)
 
-	app.PostFunc("/users/register", userHandler.Register)
+	// User endpoints
 	app.PostFunc("/users/follow/{userReferenceID}", userHandler.Follow)
 	app.PostFunc("/users/unfollow/{userReferenceID}", userHandler.Unfollow)
+
+	// Post endpoints
 	app.PostFunc("/posts/like/{id}", postHandler.Like)
 	app.PostFunc("/posts/unlike/{id}", postHandler.Unlike)
 	app.PostFunc("/posts", postHandler.Create)
 	app.GetFunc("/posts/{id}", postHandler.GetPost)
+
+	// Auth endpoints
+	app.PostFunc("/auth/register", authHandler.Register)
+	app.PostFunc("/auth/token", authHandler.Token)
+
+	// Frontend endpoints
 	app.GetFunc("/feed", postHandler.GetFeed)
 	app.GetFunc("/profile/{username}", userHandler.GetProfile)
 	app.GetFunc("/me", userHandler.GetInfo)
@@ -108,6 +117,13 @@ func buildServices() *core.Container {
 		client := ctn.GetService("PostClient").(posts.Client)
 		mediaClient := ctn.GetService("MediaClient").(media.Client)
 		h := handler.NewPostHandler(client, mediaClient)
+		return h
+	})
+
+	ctn.AddService("AuthHandler", func(ctn *core.Container) interface{} {
+		usersClient := ctn.GetService("UserClient").(users.Client)
+		authClient := ctn.GetService("AuthClient").(auth.Client)
+		h := handler.NewAuthHandler(usersClient, authClient)
 		return h
 	})
 

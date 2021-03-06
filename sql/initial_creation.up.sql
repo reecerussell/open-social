@@ -10,7 +10,7 @@ CREATE TABLE [dbo].[Users] (
 	[MediaId] INT NULL,
 	[Username] VARCHAR(20) NOT NULL UNIQUE,
 	[PasswordHash] VARCHAR(MAX) NOT NULL,
-	[Bio] VARCHAR(255) NOT NULL,
+	[Bio] VARCHAR(255) NULL,
     CONSTRAINT FK_Users_MediaId FOREIGN KEY ([MediaId]) REFERENCES [Users] ([Id])
 );
 
