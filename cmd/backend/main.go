@@ -100,11 +100,16 @@ func buildServices() *core.Container {
 		var alg gojwt.Algorithm
 		var err error
 
-		path := os.Getenv(tokenPublicKeyVar)
-		if path != "" {
+		if path, ok := os.LookupEnv(tokenPublicKeyVar); ok {
+			log.Printf("Using token public key file (%s)\n", path)
 			alg, err = rsa.NewFromFile(path, crypto.SHA256)
 		} else {
-			data := os.Getenv(tokenPublicKeyDataVar)
+			data, ok := os.LookupEnv(tokenPublicKeyDataVar)
+			if !ok {
+				panic("either a public key file path need to be given, or raw data")
+			}
+
+			log.Printf("Using token public key data (length: %d)\n", len(data))
 			alg, err = rsa.New([]byte(data), crypto.SHA256)
 		}
 

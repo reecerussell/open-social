@@ -13,7 +13,7 @@ import (
 	"github.com/reecerussell/open-social/media"
 )
 
-var credentialJSON = "GOOGLE_CREDENTIAL_JSON"
+var credentialJSONVar = "GOOGLE_CREDENTIAL_JSON"
 
 // bucket is an implementation of media.Service for Google Cloud Platform's storage buckets.
 type bucket struct {
@@ -27,8 +27,8 @@ func New(ctx context.Context, bucketName string) (media.Service, error) {
 	var client *storage.Client
 	var err error
 
-	credJSON := os.Getenv(credentialJSON)
-	if credJSON != "" {
+	credJSON, ok := os.LookupEnv(credentialJSONVar)
+	if ok {
 		cred := option.WithCredentialsJSON([]byte(credJSON))
 		client, err = storage.NewClient(ctx, cred)
 	} else {

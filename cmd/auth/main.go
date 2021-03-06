@@ -82,11 +82,16 @@ func buildServices(cnf *Config) *core.Container {
 		var alg gojwt.Algorithm
 		var err error
 
-		path := os.Getenv(tokenPrivateKeyVar)
-		if path != "" {
-			alg, err = rsa.NewFromFile(tokenPrivateKeyVar, crypto.SHA256)
+		if path, ok := os.LookupEnv(tokenPrivateKeyVar); ok {
+			log.Printf("Using token private key file (%s)\n", path)
+			alg, err = rsa.NewFromFile(path, crypto.SHA256)
 		} else {
-			data := os.Getenv(tokenPrivateKeyDataVar)
+			data, ok := os.LookupEnv(tokenPrivateKeyDataVar)
+			if !ok {
+				panic("either a private key file path need to be given, or raw data")
+			}
+
+			log.Printf("Using token private key data (length: %d)\n", len(data))
 			alg, err = rsa.New([]byte(data), crypto.SHA256)
 		}
 
