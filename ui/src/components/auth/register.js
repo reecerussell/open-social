@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { authApi } from "../../api";
 import { Textbox } from "../form";
 
@@ -87,6 +87,9 @@ const Register = ({ error, loading, success, submitRegistration }) => {
                 </button>
               </div>
             </form>
+            <p className="text-center mb-0">
+              <Link to="/login">Already have an account?</Link>
+            </p>
           </div>
         </div>
       </div>
